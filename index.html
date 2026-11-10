@@ -288,7 +288,7 @@
             </div>
         </section>
 
-        <!-- 3. FLASHCARD SELECTION STEPPER (MODIFIED FLOW) -->
+        <!-- 3. FLASHCARD SELECTION STEPPER -->
         <section id="screen-flashcard-select" class="hidden space-y-6">
             <div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                 <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition flex items-center gap-2">
@@ -385,7 +385,7 @@
                 <!-- Center: Title -->
                 <div class="text-center">
                     <h3 id="fc-top-system-title" class="font-extrabold text-slate-800 text-base sm:text-lg tracking-tight">
-                        20-ระบบต่อมไร้ท่อ
+                        ระบบต่อมไร้ท่อ
                     </h3>
                 </div>
 
@@ -460,20 +460,8 @@
                             </h2>
 
                             <!-- Explanation Text -->
-                            <div id="fc-answer-details" class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal text-slate-600 max-w-xl mx-auto space-y-2">
+                            <div id="fc-answer-details" class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl mx-auto space-y-2">
                                 <p>รายละเอียดการทำงานและการสังเคราะห์สารตามหลักวิชาชีพการพยาบาล...</p>
-                            </div>
-
-                            <!-- Anatomy Vector Diagram Box -->
-                            <div id="fc-diagram-container" class="mt-4 pt-3 max-w-md mx-auto">
-                                <div id="fc-diagram-box" class="w-full flex items-center justify-center">
-                                    <!-- Diagram SVG injected here -->
-                                </div>
-                                <div class="text-right mt-2">
-                                    <span id="fc-reference-tag" class="text-[10px] sm:text-xs text-slate-400 font-normal italic">
-                                        Campbell Biology
-                                    </span>
-                                </div>
                             </div>
                         </div>
 
@@ -569,7 +557,7 @@
                 </button>
                 <div class="text-center">
                     <h2 class="font-bold text-slate-800 text-lg">📝 เลือกชุดแบบทดสอบกายวิภาคศาสตร์</h2>
-                    <p class="text-xs text-slate-500">แบบทดสอบรวม 50 ข้อ (จับเวลาทำข้อสอบสด)</p>
+                    <p class="text-xs text-slate-500">แบบทดสอบ (จับเวลาทำข้อสอบสด)</p>
                 </div>
                 <div class="w-20"></div>
             </div>
@@ -609,7 +597,7 @@
                     <span class="text-xs font-semibold text-slate-400">แบบทดสอบรวม 50 ข้อ</span>
                 </div>
 
-                <!-- Clean Question Title without (ปรนัย) or (อัตนัย) -->
+                <!-- Clean Question Title -->
                 <h3 id="exam-question-title" class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed">
                     ข้อที่ 1: คำถามแบบทดสอบจะแสดงขึ้นมาตรงนี้...
                 </h3>
@@ -660,7 +648,7 @@
                                 [คำตอบ X ตัวอักษร]
                             </span>
                         </div>
-                        <input type="text" id="exam-text-answer" placeholder="พิมพ์ชื่ออวัยวะภาษาไทย หรือ ทับศัพท์..."
+                        <input type="text" id="exam-text-answer" placeholder="พิมพ์ชื่ออวัยวะภาษาไทย..."
                             class="w-full px-4 py-3 rounded-lg border border-sky-300 focus:ring-2 focus:ring-nursing-500 focus:border-nursing-500 text-base font-semibold text-slate-800 shadow-sm">
                         <p class="text-xs text-slate-500">* ไม่ต้องเว้นวรรค (คำตอบจะได้รับการตรวจสอบตามชื่อกายวิภาคศาสตร์)</p>
                     </div>
@@ -886,20 +874,18 @@
         /* ==========================================================================
            1. APP STATE & LOCALSTORAGE MANAGEMENT
            ========================================================================== */
-        let currentUser = null; // { prefix: 'นรพ.', name: 'สมหญิง สุดสวย', id: '63069', history: [] }
+        let currentUser = null; 
 
-        // Active Flashcard Deck State
         let currentFcSystemId = null;
-        let currentFcPartId = null; // 'anatomy' or 'physiology'
+        let currentFcPartId = null; 
         let activeDeck = [];
         let currentFcIndex = 0;
         let isCardFlipped = false;
 
-        // Active Exam State & Timer
         let currentExamSystemId = null;
         let activeExamQuestions = [];
         let currentExamIndex = 0;
-        let userExamAnswers = {}; // { questionIndex: answerValue }
+        let userExamAnswers = {}; 
         let examTimerInterval = null;
         let examSecondsElapsed = 0;
 
@@ -1064,7 +1050,7 @@
             { id: 'urinary', code: '07', name: 'ระบบขับถ่ายปัสสาวะ', icon: 'fa-filter', color: 'bg-teal-500' },
             { id: 'reproductive', code: '08', name: 'ระบบสืบพันธุ์', icon: 'fa-venus-mars', color: 'bg-pink-500' },
             { id: 'immune', code: '09', name: 'ระบบภูมิคุ้มกัน', icon: 'fa-shield-halved', color: 'bg-indigo-500' },
-            { id: 'integumentary', code: '10', name: 'ระบบปกคลุมร่างกาย', icon: 'fa-hand', color: 'bg-yellow-600' }
+            { id: 'integumentary', code: '10', name: 'ระบบผิวหนัง', icon: 'fa-hand', color: 'bg-yellow-600' }
         ];
 
         /* ==========================================================================
@@ -1076,30 +1062,13 @@
                 { q: 'ต่อมหมวกไต (Adrenal Gland) แบ่งโครงสร้างกายวิภาคศาสตร์เป็นกี่ชั้นหลัก', a: 'แบ่งเป็น 2 ชั้น:\n1. Adrenal Cortex (ชั้นนอก): แบ่งย่อยเป็น Zona Glomerulosa, Fasciculata, Reticularis\n2. Adrenal Medulla (ชั้นใน): เป็นเนื้อเยื่อประสาทเปลี่ยนรูป', d: 2 },
                 { q: 'ต่อมไทรอยด์ (Thyroid Gland) มีลักษณะทางกายวิภาคและการวางตำแหน่งอย่างไร', a: 'วางตัวอยู่หน้าต่อหลอดลม (Trachea) ใต้ต่อลูกกระเดือก มีลักษณะคล้ายผีเสื้อ (Butterfly-shaped) ประกอบด้วย Left & Right Lobes เชื่อมกันด้วย Isthmus', d: 2 },
                 { q: 'ต่อมพาราไทรอยด์ (Parathyroid Glands) มีจำนวนกี่ต่อมและตั้งอยู่ ณ ตำแหน่งใด', a: 'มีจำนวน 4 ต่อมขนาดเล็ก ฝังอยู่ทางด้านหลัง (Posterior surface) ของพูต่อมไทรอยด์ข้างละ 2 ต่อม (Superior & Inferior)', d: 3 }
-            ],
-            skeletal: [
-                { q: 'โครงกระดูกแกนกลาง (Axial Skeleton) ประกอบด้วยกระดูกรวมกี่ชิ้น และมีส่วนใดบ้าง', a: 'มีจำนวนรวม 80 ชิ้น ประกอบด้วย กระดูกกะโหลกศีรษะ (Skull 22 ชิ้น), กระดูกหู (Auditory ossicles 6 ชิ้น), กระดูกโคนลิ้น (Hyoid 1 ชิ้น), กระดูกสันหลัง (Vertebral column 26 ชิ้น), กระดูกอก (Sternum 1 ชิ้น) และกระดูกซี่โครง (Ribs 24 ชิ้น)', d: 4 },
-                { q: 'โครงกระดูกรยางค์ (Appendicular Skeleton) ประกอบด้วยกระดูกกี่ชิ้น', a: 'มีจำนวนรวม 126 ชิ้น ประกอบด้วย กระดูกไหล่ (Pectoral girdle), กระดูกแขนและมือ (Upper limbs), กระดูกเชิงกราน (Pelvic girdle) และกระดูกขาและเท้า (Lower limbs)', d: 3 },
-                { q: 'รอยต่อกะโหลกศีรษะ (Sutures) ที่สำคัญมีอะไรบ้าง และกั้นระหว่างกระดูกชิ้นใด', a: '1. Coronal Suture: กั้นระหว่าง Frontal และ Parietal\n2. Sagittal Suture: กั้นระหว่าง Parietal สองข้าง\n3. Lambdoid Suture: กั้นระหว่าง Parietal และ Occipital\n4. Squamous Suture: กั้นระหว่าง Parietal และ Temporal', d: 4 }
-            ],
-            circulatory: [
-                { q: 'หัวใจมีลิ้นหัวใจ (Heart Valves) กี่จุด และแต่ละจุดกั้นระหว่างห้องใดบ้าง', a: 'มี 4 จุดหลัก:\n1. Tricuspid Valve: กั้นระหว่าง Right Atrium และ Right Ventricle\n2. Bicuspid (Mitral) Valve: กั้นระหว่าง Left Atrium และ Left Ventricle\n3. Pulmonary Valve: กั้นระหว่าง Right Ventricle และ Pulmonary Artery\n4. Aortic Valve: กั้นระหว่าง Left Ventricle และ Aorta', d: 3 }
             ]
         };
 
         const PHYSIOLOGY_QUESTIONS_BANK = {
             endocrine: [
                 { q: 'ลำดับกระบวนการส่งสัญญาณการหลั่งฮอร์โมนในกลไก Negative Feedback ของต่อมไทรอยด์เริ่มจากอวัยวะใดไปอวัยวะใด', a: 'Hypothalamus (หลั่ง TRH) ➔ กระตุ้น ต่อมใต้สมองส่วนหน้า (หลั่ง TSH) ➔ กระตุ้น ต่อมไทรอยด์ (หลั่ง T3/T4) ➔ เมื่อระดับ T3/T4 ในเลือดสูงจะย้อนกลับไปยับยั้ง Hypothalamus และ Pituitary', d: 3 },
-                { q: 'กลไกการออกฤทธิ์ของฮอร์โมนกลุ่มเปปไทด์ (Peptide Hormones) ต่อเซลล์เป้าหมายเป็นอย่างไร', a: 'หลั่งเข้ากระแสเลือด ➔ จับกับ Receptor บนเยื่อหุ้มเซลล์เป้าหมาย ➔ กระตุ้น Second Messenger (เช่น cAMP) ➔ กระตุ้น Enzyme Cascade เกิดการตอบสนองของเซลล์', d: 3 },
-                { q: 'กลไกการทำงานของระบบ RAAS ในการเพิ่มความดันโลหิตมีลำดับอวัยวะอย่างไร', a: 'ไต (หลั่ง Renin) ➔ ตับ (หลั่ง Angiotensinogen ถูกเปลี่ยนเป็น Angiotensin I) ➔ ปอด (หลั่ง ACE เปลี่ยนเป็น Angiotensin II) ➔ ต่อมหมวกไต (หลั่ง Aldosterone ดูด Na+ และน้ำกลับเข้ากระแสเลือด)', d: 4 },
-                { q: 'การควบคุมระดับน้ำตาลในเลือดหลังมื้ออาหารมีกลไกสรีรวิทยาอย่างไร', a: 'ระดับน้ำตาลในเลือดสูง ➔ Beta cells ของตับอ่อนหลั่ง Insulin ➔ นำ Glucose เข้าเซลล์ตับและกล้ามเนื้อเพื่อเปลี่ยนเป็น Glycogen ➔ ระดับน้ำตาลในเลือดลดลงสู่ระดับปกติ', d: 2 }
-            ],
-            digestive: [
-                { q: 'ลำดับการเดินทางของอาหารผ่านทางเดินอาหาร (GI Tract Pathway) เริ่มจากอวัยวะใดไปสิ้นสุดที่อวัยวะใด', a: 'ช่องปาก (Mouth) ➔ คอหอย (Pharynx) ➔ หลอดอาหาร (Esophagus) ➔ กระเพาะอาหาร (Stomach) ➔ ลำไส้เล็ก (Duodenum ➔ Jejunum ➔ Ileum) ➔ ลำไส้ใหญ่ (Caecum ➔ Colon ➔ Rectum) ➔ ทวารหนัก (Anus)', d: 2 }
-            ],
-            circulatory: [
-                { q: 'ลำดับการเดินทางของกระแสไฟฟ้าหัวใจ (Cardiac Conduction Pathway) เริ่มจากจุดใดไปจุดใด', a: 'SA Node (Sinoatrial node) ➔ AV Node (Atrioventricular node) ➔ Bundle of His ➔ Right & Left Bundle Branches ➔ Purkinje Fibers', d: 3 },
-                { q: 'เส้นทางการไหลเวียนของเลือดดำจากร่างกายผ่านห้องหัวใจไปปอดและกลับไปเลี้ยงร่างกายเริ่มจากห้องใดไปห้องใด', a: 'Vena Cava ➔ Right Atrium ➔ Tricuspid Valve ➔ Right Ventricle ➔ Pulmonary Valve ➔ Pulmonary Artery ➔ ปอด ➔ Pulmonary Veins ➔ Left Atrium ➔ Mitral Valve ➔ Left Ventricle ➔ Aorta', d: 3 }
+                { q: 'กลไกการออกฤทธิ์ของฮอร์โมนกลุ่มเปปไทด์ (Peptide Hormones) ต่อเซลล์เป้าหมายเป็นอย่างไร', a: 'หลั่งเข้ากระแสเลือด ➔ จับกับ Receptor บนเยื่อหุ้มเซลล์เป้าหมาย ➔ กระตุ้น Second Messenger (เช่น cAMP) ➔ กระตุ้น Enzyme Cascade เกิดการตอบสนองของเซลล์', d: 3 }
             ]
         };
 
@@ -1135,7 +1104,7 @@
                 const template = dynamicTemplates[deck.length % dynamicTemplates.length];
                 deck.push({
                     question: `[ข้อที่ ${count}] ทบทวน${isAnatomy ? 'กายวิภาคศาสตร์' : 'สรีรวิทยา'}ใน ${sysName}: ${template.q}`,
-                    answer: `สรุปสาระสำคัญทาง${isAnatomy ? 'กายวิภาคศาสตร์' : 'สรีรวิทยา'}ของ ${sysName}:\n${template.a} (ทบทวนความรู้เพื่อเตรียมสอบสภาการพยาบาล ข้อที่ ${count})`,
+                    answer: `สรุปสาระสำคัญทาง${isAnatomy ? 'กายวิภาคศาสตร์' : 'สรีรวิทยา'}ของ ${sysName}:\n${template.a}`,
                     difficulty: ((count % 5) + 1)
                 });
                 count++;
@@ -1145,7 +1114,7 @@
         }
 
         /* ==========================================================================
-           4. FLASHCARD UI FLOW (STEP 1: SYSTEM -> STEP 2: ANATOMY OR PHYSIOLOGY ONLY)
+           4. FLASHCARD UI FLOW
            ========================================================================== */
         function renderFcStep1() {
             document.getElementById('fc-step-1').classList.remove('hidden');
@@ -1158,7 +1127,6 @@
                     <div class="w-12 h-12 rounded-xl ${sys.color} text-white flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
                         <i class="fa-solid ${sys.icon}"></i>
                     </div>
-                    <span class="text-xs font-bold text-slate-400 block">${sys.code}</span>
                     <h4 class="font-bold text-slate-800 text-xs sm:text-sm group-hover:text-fisherman-green transition">${sys.name}</h4>
                 </div>
             `).join('');
@@ -1181,7 +1149,7 @@
         }
 
         function startFcDeck(partId) {
-            currentFcPartId = partId; // 'anatomy' or 'physiology'
+            currentFcPartId = partId; 
             activeDeck = generateFlashcardDeck(currentFcSystemId, currentFcPartId);
             currentFcIndex = 0;
             isCardFlipped = false;
@@ -1197,10 +1165,9 @@
 
             const card = activeDeck[currentFcIndex];
             const sysObj = ORGAN_SYSTEMS.find(s => s.id === currentFcSystemId);
-            const sysCode = sysObj ? sysObj.code : '20';
             const sysName = sysObj ? sysObj.name : 'ระบบต่อมไร้ท่อ';
 
-            document.getElementById('fc-top-system-title').innerText = `${sysCode}-${sysName}`;
+            document.getElementById('fc-top-system-title').innerText = sysName;
             document.getElementById('fc-banner-system-name').innerText = sysName;
 
             isCardFlipped = false;
@@ -1232,19 +1199,6 @@
 
             document.getElementById('fc-answer-title').innerText = mainTitle;
             document.getElementById('fc-answer-details').innerHTML = subDetail ? `<p>${subDetail}</p>` : '';
-
-            document.getElementById('fc-diagram-box').innerHTML = `
-                <svg viewBox="0 0 340 130" class="w-full h-32 max-w-sm mx-auto">
-                    <rect width="340" height="130" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <path d="M30,65 Q90,25 150,65 T270,65" fill="none" stroke="#289667" stroke-width="3"/>
-                    <circle cx="150" cy="65" r="18" fill="#e11d48" />
-                    <text x="150" y="69" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">Target Cell</text>
-                    <path d="M170,65 L245,65" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
-                    <rect x="240" y="52" width="75" height="26" rx="5" fill="#fbbf24"/>
-                    <text x="277" y="68" text-anchor="middle" fill="#000" font-size="10" font-weight="bold">RESPONSE</text>
-                </svg>
-            `;
-            document.getElementById('fc-reference-tag').innerText = `Campbell Biology / Gray's Anatomy • ${sysName}`;
 
             const btnPrev = document.getElementById('btn-fc-prev');
             btnPrev.style.opacity = (currentFcIndex === 0) ? '0.4' : '1';
@@ -1410,51 +1364,155 @@
         }
 
         /* ==========================================================================
-           6. EXAMINATION MODE WITH REAL-TIME TIMER & ANATOMICAL KEYWORD CLUES
+           6. EXAMINATION MODE WITH REAL-TIME TIMER
            ========================================================================== */
-        const KEYWORD_CLUES_BANK = [
+        
+        // 15 Distinct Subjective Keyword Items
+        const KEYWORD_CLUES_BANK_15 = [
             {
                 name: 'ต่อมไทรอยด์',
-                location: 'ด้านหน้าของลำคอ บริเวณใต้ต่อลูกกระเดือก (Larynx) หน้าต่อหลอดลม (Trachea)',
-                function: 'สังเคราะห์และหลั่งฮอร์โมน T3 (Triiodothyronine) และ T4 (Thyroxine) ควบคุม Basal Metabolic Rate',
-                adjacent: 'หลอดลม (Trachea), กล้ามเนื้อ Sternocleidomastoid, ต่อมพาราไทรอยด์ 4 ต่อมด้านหลัง',
-                feature: 'รูปร่างคล้ายผีเสื้อ (Butterfly-shaped) ประกอบด้วย 2 Lobes เชื่อมกันด้วย Isthmus'
+                location: 'ด้านหน้าของลำคอ บริเวณใต้ต่อลูกกระเดือก (Larynx) หน้าต่อหลอดลม',
+                function: 'สังเคราะห์และหลั่ง T3 และ T4 ควบคุม Basal Metabolic Rate (BMR)',
+                adjacent: 'หลอดลม (Trachea), ต่อมพาราไทรอยด์ 4 ต่อมด้านหลัง',
+                feature: 'รูปร่างคล้ายผีเสื้อ (Butterfly-shaped) มี 2 Lobes เชื่อมด้วย Isthmus'
             },
             {
                 name: 'กระเพาะอาหาร',
                 location: 'ช่องท้องฝั่งซ้ายบน (Left Upper Quadrant) ใต้ต่อกะบังลม',
-                function: 'ย่อยอาหารเชิงกลด้วยการบีบตัว และย่อยเชิงเคมีโดยหลั่ง Pepsinogen และ HCl',
-                adjacent: 'ตับ (ฝั่งขวา), ม้าม (ฝั่งซ้าย), ตับอ่อน (ด้านหลัง), กะบังลม (ด้านบน)',
-                feature: 'อวัยวะรูปตัวเจ (J-shaped organ) มี Rugae เป็นรอยพับภายในกระเพาะ'
+                function: 'ย่อยอาหารเชิงกลด้วยการบีบตัว และหลั่ง Pepsinogen กับ HCl',
+                adjacent: 'ตับ (ฝั่งขวา), ม้าม (ฝั่งซ้าย), ตับอ่อน (ด้านหลัง)',
+                feature: 'อวัยวะรูปตัวเจ (J-shaped organ) มีรอยพับ internal rugae'
             },
             {
                 name: 'หัวใจ',
                 location: 'ช่องอกบริเวณ Mediastinum ระหว่างปอดทั้งสองข้าง ค่อนไปทางซ้าย',
-                function: 'สูบฉีดเลือดไปเลี้ยงปอดเพื่อแลกเปลี่ยนแก๊ส และสูบฉีดเลือดแดงไปเลี้ยงทั่วร่างกาย',
-                adjacent: 'ปอดซ้ายและปอดขวา, กะบังลม (ด้านล่าง), หลอดอาหารและกระดูกสันหลัง (ด้านหลัง)',
-                feature: 'มี 4 ห้อง (2 Atria, 2 Ventricles) ล้อมรอบด้วยเยื่อหุ้ม Pericardium'
+                function: 'สูบฉีดเลือดไปเลี้ยงปอดและสูบฉีดเลือดแดงไปเลี้ยงทั่วร่างกาย',
+                adjacent: 'ปอดซ้ายและปอดขวา, กะบังลม (ด้านล่าง), หลอดอาหาร',
+                feature: 'มี 4 ห้อง (2 Atria, 2 Ventricles) ล้อมรอบด้วยเยื่อ Pericardium'
             },
             {
                 name: 'ไต',
-                location: 'ช่องท้องด้านหลัง (Retroperitoneal space) ระดับ T12 ถึง L3 ข้างๆ กระดูกสันหลัง',
-                function: 'กรองของเสียออกจากเลือด ปรับสมดุลน้ำ อิเล็กโทรไลต์ กรด-ด่าง และหลั่ง Renin/Erythropoietin',
-                adjacent: 'ต่อมหมวกไต (ด้านบน), ตับ (ขวา), ม้าม (ซ้าย), ท่อไต Ureter (ด้านล่าง)',
+                location: 'ช่องท้องด้านหลัง (Retroperitoneal space) ระดับ T12 ถึง L3',
+                function: 'กรองของเสียออกจากเลือด ปรับสมดุลน้ำ อิเล็กโทรไลต์ กรด-ด่าง และหลั่ง Renin',
+                adjacent: 'ต่อมหมวกไต (ด้านบน), ท่อไต Ureter (ด้านล่าง)',
                 feature: 'รูปร่างคล้ายเมล็ดถั่ว (Bean-shaped) มีหน่วยกรองหลักคือ Nephron'
             },
             {
                 name: 'ตับ',
                 location: 'ช่องท้องฝั่งขวาบน (Right Upper Quadrant) ใต้ต่อกะบังลมขวา',
-                function: 'สร้างน้ำดี (Bile), กำจัดสารพิษ (Detoxification), สะสม Glycogen และสังเคราะห์ Plasma Proteins',
-                adjacent: 'ถุงน้ำดี (Gallbladder), กระเพาะอาหาร, กะบังลม, ลำไส้ใหญ่ส่วนขวา',
+                function: 'สร้างน้ำดี (Bile), กำจัดสารพิษ (Detoxification), สะสม Glycogen',
+                adjacent: 'ถุงน้ำดี (Gallbladder), กระเพาะอาหาร, กะบังลม',
                 feature: 'อวัยวะภายในที่มีขนาดใหญ่ที่สุดในร่างกาย มี 4 Lobes หลัก'
             },
             {
                 name: 'ปอด',
-                location: 'ช่องอก (Thoracic Cavity) ทั้งสองข้าง ล้อมรอบด้วยเยื่อหุ้มปอด Pleura',
-                function: 'แลกเปลี่ยนแก๊ส O2 เข้าสู่กระแสเลือด และกำจัด CO2 ออกจากร่างกายผ่านถุงลม (Alveoli)',
-                adjacent: 'หัวใจ (ตรงกลาง), กะบังลม (ด้านล่าง), ซี่โครง (ด้านข้าง)',
-                feature: 'ปอดขวามี 3 Lobes ปอดซ้ายมี 2 Lobes (มี Cardiac notch สำหรับหัวใจ)'
+                location: 'ช่องอก (Thoracic Cavity) ทั้งสองข้าง ล้อมรอบด้วย Pleura',
+                function: 'แลกเปลี่ยนแก๊ส O2 เข้าสู่เลือด และกำจัด CO2 ผ่านถุงลม (Alveoli)',
+                adjacent: 'หัวใจ (ตรงกลาง), กะบังลม (ด้านล่าง), ซี่โครง',
+                feature: 'ปอดขวามี 3 Lobes ปอดซ้ายมี 2 Lobes (มี Cardiac notch)'
+            },
+            {
+                name: 'ต่อมหมวกไต',
+                location: 'วางตัวอยู่บนขั้วบนของไตทั้งสองข้าง (Superior pole of kidneys)',
+                function: 'หลั่ง Cortisol, Aldosterone และ Adrenaline ตอบสนองต่อภาวะเครียด',
+                adjacent: 'ไต (ด้านล่าง), กะบังลม (ด้านบน)',
+                feature: 'แบ่งโครงสร้างเป็น 2 ชั้นหลักคือ Adrenal Cortex และ Medulla'
+            },
+            {
+                name: 'ตับอ่อน',
+                location: 'ช่องท้องด้านหลัง วางตัวตามแนวนอนหลังกระเพาะอาหาร',
+                function: 'หลั่งเอนไซม์ย่อยอาหารเข้าสู่ Duodenum และหลั่ง Insulin/Glucagon',
+                adjacent: 'ลำไส้เล็กส่วน Duodenum, ม้าม, กระเพาะอาหาร',
+                feature: 'มีกลุ่มเซลล์ Islets of Langerhans ทำหน้าที่สร้างฮอร์โมน'
+            },
+            {
+                name: 'ซีรีเบลลัม',
+                location: 'แอ่งกะโหลกศีรษะด้านหลัง (Posterior cranial fossa) ใต้ต่อ Occipital lobe',
+                function: 'ควบคุมการทำงานของกล้ามเนื้อให้ประสานกันและการทรงตัวของร่างกาย',
+                adjacent: 'ก้านสมอง (Brainstem), สมองใหญ่ส่วน Occipital lobe',
+                feature: 'มีรอยพับลักษณะคล้ายใบไม้ (Folia) และโครงสร้างเนื้อขาว Arbor Vitae'
+            },
+            {
+                name: 'ลำไส้เล็ก',
+                location: 'ช่องท้องส่วนกลาง ล้อมรอบด้วยลำไส้ใหญ่',
+                function: 'ย่อยและดูดซึมสารอาหารเข้าสู่กระแสเลือดมากที่สุดในร่างกาย',
+                adjacent: 'กระเพาะอาหาร (ด้านบน), ลำไส้ใหญ่ (ล้อมรอบ)',
+                feature: 'แบ่งเป็น Duodenum, Jejunum, Ileum มี Villi เพิ่มพื้นที่ดูดซึม'
+            },
+            {
+                name: 'หนังแท้',
+                location: 'ชั้นกลางของผิวหนัง วางตัวอยู่ใต้ชั้นหนังกำพร้า (Epidermis)',
+                function: 'ให้ความยืดหยุ่น ยึดเกาะ มีหลอดเลือด หลอดน้ำเหลือง และต่อมเหงื่อ',
+                adjacent: 'หนังกำพร้า (ด้านบน), ชั้นไขมัน Subcutaneous (ด้านล่าง)',
+                feature: 'ประกอบด้วยเนื้อเยื่อเกี่ยวพัน มีเส้นใย Collagen และ Elastin'
+            },
+            {
+                name: 'ท่อไต',
+                location: 'เชื่อมต่อจากกรวยไต (Renal pelvis) ลงสู่กระเพาะปัสสาวะ',
+                function: 'ลำเลียงปัสสาวะจากไตไปยังกระเพาะปัสสาวะด้วยการบีบตัว Peristalsis',
+                adjacent: 'ไต (ด้านบน), กระเพาะปัสสาวะ (ด้านล่าง)',
+                feature: 'ท่อยาวประมาณ 25-30 ซม. มีผนังกล้ามเนื้อเรียบ 3 ชั้น'
+            },
+            {
+                name: 'ต่อมใต้สมอง',
+                location: 'แอ่ง Sella Turcica ของกระดูก Sphenoid bone',
+                function: 'เป็นต่อมไร้ท่อแม่บท (Master gland) ควบคุมการทำงานของต่อมอื่น',
+                adjacent: 'Hypothalamus (เชื่อมผ่าน Infundibulum), Optic chiasm',
+                feature: 'แบ่งเป็นส่วนหน้า Adenohypophysis และส่วนหลัง Neurohypophysis'
+            },
+            {
+                name: 'เอออร์ตา',
+                location: 'ทอดตัวออกจากหัวใจห้องล่างซ้าย ลอดผ่านช่องอกลงสู่ช่องท้อง',
+                function: 'ลำเลียงเลือดแดงที่มีออกซิเจนสูงไปเลี้ยงส่วนต่างๆ ทั่วร่างกาย',
+                adjacent: 'หัวใจ, หลอดลมใหญ่, กระดูกสันหลัง',
+                feature: 'หลอดเลือดแดงขนาดใหญ่ที่สุด มีส่วน Arch of Aorta ที่โค้งงอ'
+            },
+            {
+                name: 'ม้าม',
+                location: 'ช่องท้องฝั่งซ้ายบน ใต้กะบังลม ติดกับกระเพาะอาหาร',
+                function: 'กรองและทำลายเม็ดเลือดแดงหมดอายุ สะสมเกล็ดเลือด และทำหน้าที่ภูมิคุ้มกัน',
+                adjacent: 'กระเพาะอาหาร, ไตซ้าย, ตับอ่อน',
+                feature: 'อวัยวะน้ำเหลืองขนาดใหญ่ที่สุด มีเนื้อเยื่อ Red pulp และ White pulp'
             }
+        ];
+
+        // 35 Distinct Multiple Choice Questions
+        const UNIQUE_MC_BANK_35 = [
+            { stem: 'ข้อใดคือหน้าที่หลักของฮอร์โมน Calcitonin ในการรักษาสมดุลแคลเซียมในกระแสเลือด', options: ['ลดระดับแคลเซียมในเลือดโดยยับยั้งการสลายกระดูก', 'เพิ่มระดับแคลเซียมในเลือดโดยกระตุ้น Osteoclast', 'กระตุ้นการดูดซึมแคลเซียมที่ลำไส้เล็ก', 'กระตุ้นการหลั่งเอนไซม์จากตับอ่อน'], correctIndex: 0, explanation: 'Calcitonin หลั่งจาก Parafollicular cells ของต่อมไทรอยด์ ทำหน้าที่ลดระดับแคลเซียมในเลือด' },
+            { stem: 'โครงสร้างใดในระบบประสาททำหน้าที่เป็นศูนย์ควบคุมการหายใจ การเต้นของหัวใจ และความดันโลหิต', options: ['Medulla Oblongata', 'Cerebellum', 'Thalamus', 'Corpus Callosum'], correctIndex: 0, explanation: 'Medulla Oblongata ในก้านสมองเป็นศูนย์ควบคุมสัญญาณชีพสำคัญของร่างกาย' },
+            { stem: 'หลอดเลือดใดนำเลือดที่มีปริมาณออกซิเจนสูงจากปอดกลับเข้าสู่หัวใจห้องบนซ้าย (Left Atrium)', options: ['Pulmonary Veins', 'Pulmonary Arteries', 'Superior Vena Cava', 'Coronary Sinus'], correctIndex: 0, explanation: 'Pulmonary Veins เป็นหลอดเลือดดำเวชพันธุ์พิเศษที่นำเลือดแดงมีออกซิเจนจากปอดเข้าหัวใจ' },
+            { stem: 'ลิ้นหัวใจชนิดใดกั้นระหว่างหัวใจห้องบนขวา (Right Atrium) และห้องล่างขวา (Right Ventricle)', options: ['Tricuspid Valve', 'Bicuspid (Mitral) Valve', 'Aortic Valve', 'Pulmonary Valve'], correctIndex: 0, explanation: 'Tricuspid Valve มี 3 แฉก กั้นระหว่างห้องบนขวาและล่างขวา' },
+            { stem: 'ส่วนใดของหน่วยไต (Nephron) ที่มีการดูดกลับของน้ำและสารอาหารที่มีประโยชน์เข้าสู่กระแสเลือดมากที่สุด', options: ['Proximal Convoluted Tubule (PCT)', 'Loop of Henle', 'Distal Convoluted Tubule (DCT)', 'Glomerulus'], correctIndex: 0, explanation: 'PCT เป็นบริเวณที่มีการดูดกลับสารอาหาร กลูโคส กรดอะมิโน และน้ำถึง 65-70%' },
+            { stem: 'เอนไซม์ Pepsin ในกระเพาะอาหารจะทำงานได้ดีที่สุดเมื่ออยู่ในสภาวะใด', options: ['สภาวะกรดรุนแรง (pH 1.5 - 2.0)', 'สภาวะด่างอ่อน (pH 8.0)', 'สภาวะเป็นกลาง (pH 7.0)', 'สภาวะที่มีเกลือน้ำดีสูง'], correctIndex: 0, explanation: 'Pepsin ต้องการกรดเกลือ (HCl) ในกระเพาะเพื่อเปลี่ยนจาก Pepsinogen เป็น Pepsin และออกฤทธิ์ได้ดีในภาวะกรด' },
+            { stem: 'โครงสร้างกระดูกสันหลังส่วนใดที่มีขนาดชิ้นกระดูกใหญ่ที่สุดเพื่อรองรับน้ำหนักตัว', options: ['Lumbar Vertebrae (L1-L5)', 'Thoracic Vertebrae (T1-T12)', 'Cervical Vertebrae (C1-C7)', 'Sacrum'], correctIndex: 0, explanation: 'กระดูกสันหลังส่วนเอว (Lumbar) มีขนาดใหญ่และหนาที่สุดเพื่อรับน้ำหนักลำตัว' },
+            { stem: 'กล้ามเนื้อชนิดใดทำงานอยู่นอกเหนือการควบคุมของจิตใจ (Involuntary) และไม่มีลาย (Non-striated)', options: ['Smooth Muscle (กล้ามเนื้อเรียบ)', 'Skeletal Muscle (กล้ามเนื้อลาย)', 'Cardiac Muscle (กล้ามเนื้อหัวใจ)', 'Tendons'], correctIndex: 0, explanation: 'กล้ามเนื้อเรียบพบตามอวัยวะภายใน ไม่มีลาย และทำงานนอกอำนาจจิตใจ' },
+            { stem: 'ชั้นผิวหนังใดที่มีการเจริญเติบโตและแบ่งเซลล์ใหม่ขึ้นมาทดแทนเซลล์ที่หลุดลอกตลอดเวลา', options: ['Stratum Basale (Stratum Germinativum)', 'Stratum Corneum', 'Stratum Lucidum', 'Dermis layer'], correctIndex: 0, explanation: 'Stratum Basale เป็นชั้นลึกสุดของ Epidermis มีการแบ่งเซลล์ mitosis ตลอดเวลา' },
+            { stem: 'ฮอร์โมน Insulin หลั่งมาจากเซลล์ชนิดใดในตับอ่อน', options: ['Beta cells (β-cells)', 'Alpha cells (α-cells)', 'Delta cells (δ-cells)', 'Acinar cells'], correctIndex: 0, explanation: 'Beta cells ใน Islets of Langerhans หลั่งฮอร์โมน Insulin เพื่อลดระดับน้ำตาลในเลือด' },
+            { stem: 'เซลล์เม็ดเลือดขาวชนิดใดมีจำนวนมากที่สุดในเลือด และทำหน้าที่เป็นด่านหน้ากำจัดแบคทีเรียด้วย Phagocytosis', options: ['Neutrophils', 'Lymphocytes', 'Eosinophils', 'Basophils'], correctIndex: 0, explanation: 'Neutrophils เป็นเม็ดเลือดขาวที่มีปริมาณมากที่สุด (50-70%) กำจัดเชื้อด้วย Phagocytosis' },
+            { stem: 'อวัยวะใดทำหน้าที่สังเคราะห์น้ำดี (Bile) เพื่อช่วยในการย่อยและดูดซึมไขมัน', options: ['ตับ (Liver)', 'ถุงน้ำดี (Gallbladder)', 'ตับอ่อน (Pancreas)', 'ลำไส้ใหญ่ (Colon)'], correctIndex: 0, explanation: 'ตับเป็นอวัยวะที่สร้างน้ำดี แล้วส่งไปเก็บสะสมและควบแน่นที่ถุงน้ำดี' },
+            { stem: 'หลอดลมส่วนใดที่แบ่งแยกออกเป็นขวาและซ้ายตรงจุดขั้วปอด (Carina)', options: ['Main Bronchi (Primary Bronchi)', 'Trachea', 'Terminal Bronchioles', 'Alveolar ducts'], correctIndex: 0, explanation: 'Trachea จะแตกแขนงออกเป็น Primary (Main) Bronchi เข้าสู่ปอดขวาและซ้าย' },
+            { stem: 'ข้อต่อชนิดใดสามารถเคลื่อนไหวและหมุนได้รอบทิศทาง (Ball and Socket Joint)', options: ['ข้อต่อสะโพก (Hip Joint) และ ข้อต่อไหล่ (Shoulder Joint)', 'ข้อต่อข้อศอก (Elbow Joint)', 'ข้อต่อหัวเข่า (Knee Joint)', 'รอยต่อกะโหลกศีรษะ (Suture)'], correctIndex: 0, explanation: 'Ball and Socket Joint ช่วยให้เบ้าหัวกระดูกหมุนเคลื่อนไหวได้รอบทิศทาง' },
+            { stem: 'เส้นประสาทสมองคู่ใด (Cranial Nerve) ทำหน้าที่รับภาพและการมองเห็นเข้าสู่สมอง', options: ['CN II (Optic Nerve)', 'CN I (Olfactory Nerve)', 'CN III (Oculomotor Nerve)', 'CN VIII (Vestibulocochlear Nerve)'], correctIndex: 0, explanation: 'CN II (Optic Nerve) ทำหน้าที่รับภาพจากเรตินาในดวงตาส่งไปยัง Visual Cortex' },
+            { stem: 'อวัยวะใดทำหน้าที่กรองเม็ดเลือดแดงที่หมดอายุ และเป็นแหล่งสะสมเกล็ดเลือดกับเซลล์น้ำเหลือง', options: ['ม้าม (Spleen)', 'ต่อมไทมัส (Thymus)', 'ต่อมทอนซิล (Tonsil)', 'ตับอ่อน (Pancreas)'], correctIndex: 0, explanation: 'ม้ามทำหน้าที่กรองเลือด ทำลายเม็ดเลือดแดงหมดอายุ (อายุประมาณ 120 วัน)' },
+            { stem: 'ฮอร์โมน TSH (Thyroid Stimulating Hormone) ถูกหลั่งมาจากอวัยวะใด', options: ['Anterior Pituitary Gland', 'Thyroid Gland', 'Hypothalamus', 'Posterior Pituitary Gland'], correctIndex: 0, explanation: 'ต่อมใต้สมองส่วนหน้าหลั่ง TSH ไปกระตุ้นต่อมไทรอยด์ให้สังเคราะห์ T3/T4' },
+            { stem: 'เยื่อหุ้มหัวใจชั้นใดที่สแนบติดกับเนื้อเยื่อกล้ามเนื้อหัวใจโดยตรง', options: ['Visceral Pericardium (Epicardium)', 'Parietal Pericardium', 'Fibrous Pericardium', 'Endocardium'], correctIndex: 0, explanation: 'Visceral layer ของ Serous pericardium แนบสนิทกับชั้นนอกของกล้ามเนื้อหัวใจ' },
+            { stem: 'สารอาหารประเภทโปรตีน คาร์โบไฮเดรต และไขมัน ถูกดูดซึมมากที่สุดในทางเดินอาหารส่วนใด', options: ['Jejunum & Ileum (ลำไส้เล็ก)', 'Stomach (กระเพาะอาหาร)', 'Colon (ลำไส้ใหญ่)', 'Esophagus (หลอดอาหาร)'], correctIndex: 0, explanation: 'ลำไส้เล็กส่วน Jejunum และ Ileum มี Villi และ Microvilli ดูดซึมสารอาหารมากที่สุด' },
+            { stem: 'อัตราการกรองของไต (Glomerular Filtration Rate: GFR) ขึ้นอยู่กับปัจจัยแรงดันใดเป็นหลัก', options: ['Glomerular Hydrostatic Pressure (แรงดันเลือดในแคปิลลารี)', 'Capsular Hydrostatic Pressure', 'Blood Colloid Osmotic Pressure', 'Renal Venous Pressure'], correctIndex: 0, explanation: 'แรงดันเลือดในหลอดเลือดฝอยโกลเมอรูลัสดันน้ำออกจากเลือดเข้าสู่ Bowman\'s capsule' },
+            { stem: 'กระดูกชิ้นใดในร่างกายมนุษย์ที่มีความยาวและแข็งแรงที่สุด', options: ['กระดูกต้นขา (Femur)', 'กระดูกหน้าแข้ง (Tibia)', 'กระดูกต้นแขน (Humerus)', 'กระดูกเชิงกราน (Pelvis)'], correctIndex: 0, explanation: 'Femur เป็นกระดูกแกนยาวรับน้ำหนักของขาที่มีความยาวและแข็งแรงที่สุด' },
+            { stem: 'ขณะหายใจเข้าปกติ (Quiet Inspiration) เกิดจากการหดตัวของกล้ามเนื้อคู่ใดเป็นหลัก', options: ['กะบังลม (Diaphragm) และ External Intercostal muscles', 'Internal Intercostal muscles', 'Abdominal Rectus muscle', 'Scalene muscle'], correctIndex: 0, explanation: 'การหายใจเข้าเกิดจากการหดตัวเลื่อนต่ำลงของกะบังลมร่วมกับกล้ามเนื้อยึดซี่โครงชั้นนอก' },
+            { stem: 'สารสื่อประสาท (Neurotransmitter) ชนิดใดหลั่งตรงจุดต่อระหว่างประสาทกับกล้ามเนื้อลาย (Neuromuscular Junction)', options: ['Acetylcholine (ACh)', 'Dopamine', 'Serotonin', 'GABA'], correctIndex: 0, explanation: 'ACh หลั่งจากปลายประสาทสั่งการเพื่อกระตุ้นให้เซลล์กล้ามเนื้อลายเกิด Action Potential' },
+            { stem: 'อวัยวะโครงสร้างใดในหูส่วนในทำหน้าที่รับรู้การทรงตัวของร่างกายขณะเคลื่อนไหว', options: ['Semicircular Canals', 'Cochlea', 'Tympanic Membrane', 'Eustachian Tube'], correctIndex: 0, explanation: 'Semicircular canals 3 ท่อในหูชั้นในทำหน้าที่รับรู้การหมุนและการทรงตัว' },
+            { stem: 'เซลล์เม็ดเลือดขาวชนิดใดที่หลั่งสาร Histamine และ Heparin เมื่อเกิดปฏิกิริยาแพ้หรือการอักเสบ', options: ['Basophils & Mast cells', 'Monocytes', 'Neutrophils', 'T-Lymphocytes'], correctIndex: 0, explanation: 'Basophils และ Mast cells มีแกรนูลบรรจุ Histamine กระตุ้นการขยายตัวของหลอดเลือด' },
+            { stem: 'ฮอร์โมน Aldosterone หลั่งจาก Adrenal Cortex ออกฤทธิ์ที่ไตเพื่ออะไร', options: ['ดูดกลับ Na+ และน้ำ พร้อมขับ K+ ออกทางปัสสาวะ', 'ขับ Na+ ออกจากร่างกาย', 'กระตุ้นการดูดกลับน้ำอย่างเดียวโดยไม่สนอิเล็กโทรไลต์', 'ยับยั้งการกรองที่โกลเมอรูลัส'], correctIndex: 0, explanation: 'Aldosterone ช่วยเพิ่มการดูด Na+ และน้ำกลับเข้าเลือด เพื่อเพิ่มความดันโลหิต' },
+            { stem: 'หลอดเลือดประเภทใดมีผนังบางที่สุดประกอบด้วย Endothelium ชั้นเดียว เพื่อแลกเปลี่ยนสารอาหารและแก๊ส', options: ['Capillaries (หลอดเลือดฝอย)', 'Arterioles', 'Venules', 'Elastic Arteries'], correctIndex: 0, explanation: 'Capillaries มีผนังบางเพียงชั้นเดียว เหมาะแก่การแลกเปลี่ยนแก๊สและสารอาหาร' },
+            { stem: 'โครงสร้างกระดูกอ่อนใดทำหน้าที่ปิดทางเข้าหลอดลมขณะกลืนอาหารเพื่อป้องกันการสำลัก', options: ['Epiglottis (ลิ้นปิดกล่องเสียง)', 'Thyroid cartilage', 'Cricoid cartilage', 'Arytenoid cartilage'], correctIndex: 0, explanation: 'Epiglottis พลิกปิดกล่องเสียงขณะกลืน กันไม่ให้อาหารหลุดเข้าทางเดินหายใจ' },
+            { stem: 'ระบบประสาทซิมพาเทติก (Sympathetic Nervous System) ส่งผลต่ออวัยวะเป้าหมายอย่างไร', options: ['รูม่านตาขยาย หัวใจเต้นเร็ว หลอดลมขยายตัว', 'รูม่านตาหด หัวใจเต้นช้า กระตุ้นการบีบตัวของลำไส้', 'หลั่งน้ำลายมากขึ้น', 'ความดันโลหิตลดลง'], correctIndex: 0, explanation: 'Sympathetic ทำงานในภาวะ Fight or Flight เพิ่มอัตราเต้นหัวใจ ขยายหลอดลม' },
+            { stem: 'สมองส่วน Hypothalamus ทำหน้าที่เป็นศูนย์ควบคุมสำคัญเรื่องใดของร่างกาย', options: ['ควบคุมอุณหภูมิความเย็น-ร้อน ความอิ่ม-หิว และการหลั่งฮอร์โมน', 'ควบคุมการวางแผนวิเคราะห์ภาษาเชิงซ้อน', 'ควบคุมการมองเห็นภาพ 3 มิติ', 'ควบคุมการได้ยินเสียงสัญญาณ'], correctIndex: 0, explanation: 'Hypothalamus ควบคุม Homeostasis อุณหภูมิ อารมณ์ ความอิ่มหิว และระบบต่อมไร้ท่อ' },
+            { stem: 'แอนติบอดี (Immunoglobulin) ชนิดใดที่พบมากในสารหลั่ง เช่น น้ำนมแม่ (Colostrum) และน้ำลาย', options: ['IgA', 'IgG', 'IgM', 'IgE'], correctIndex: 0, explanation: 'IgA เป็นภูมิคุ้มกันหลักในสารหลั่งของร่างกาย รวมถึงน้ำนมแรกของมารดา' },
+            { stem: 'กล้ามเนื้อหัวใจได้รับเลือดมาเลี้ยงจากหลอดเลือดแดงคู่ออกมาจากโคนเอออร์ตาชื่อว่าอะไร', options: ['Coronary Arteries', 'Carotid Arteries', 'Subclavian Arteries', 'Celiac Arteries'], correctIndex: 0, explanation: 'Right and Left Coronary Arteries นำเลือดแดงไปเลี้ยงกล้ามเนื้อหัวใจโดยเฉพาะ' },
+            { stem: 'น้ำปัสสาวะที่กรองได้จากท่อรวบรวม (Collecting Duct) จะไหลเข้าสู่โครงสร้างใดของไตเป็นอันดับแรก', options: ['Renal Papilla & Minor Calyx', 'Renal Pelvis', 'Ureter', 'Urinary Bladder'], correctIndex: 0, explanation: 'ปัสสาวะไหลจาก Collecting duct ผ่าน Renal papilla เข้าสู่ Minor calyx ในไต' },
+            { stem: 'ต่อมไทมัส (Thymus Gland) มีบทบาทสำคัญต่อการพัฒนาของเซลล์ภูมิคุ้มกันชนิดใด', options: ['T-Lymphocytes (T-cells)', 'B-Lymphocytes (B-cells)', 'Erythrocytes', 'Platelets'], correctIndex: 0, explanation: 'Thymus เป็นสถานที่พัฒนาและคัดเลือก T-cells ให้พร้อมทำหน้าที่ภูมิคุ้มกัน' },
+            { stem: 'เซลล์ Osteoblast และ Osteoclast ทำหน้าที่แตกต่างกันอย่างไรในการปรับแต่งเนื้อกระดูก', options: ['Osteoblast สร้างเนื้อกระดูกใหม่ ส่วน Osteoclast สลายเนื้อกระดูกเดิม', 'Osteoblast สลายกระดูก ส่วน Osteoclast สร้างกระดูก', ' Osteoblast สร้างเม็ดเลือด ส่วน Osteoclast สร้างไขมัน', 'ทั้งสองทำหน้าที่สะสมแคลเซียมอย่างเดียว'], correctIndex: 0, explanation: 'Osteoblast ทำหน้าที่สร้างเนื้อกระดูก (Build) ส่วน Osteoclast ทำหน้าที่สลายกระดูก (Cleave)' }
         ];
 
         function renderExamSelection() {
@@ -1463,10 +1521,6 @@
                 <div onclick="startExam('${sys.id}')"
                     class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-nursing-600 transition cursor-pointer group flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-mono font-bold text-slate-400">ชุดที่ ${sys.code}</span>
-                            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px]">50 ข้อรวม</span>
-                        </div>
                         <div class="w-12 h-12 rounded-xl ${sys.color} text-white flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
                             <i class="fa-solid ${sys.icon}"></i>
                         </div>
@@ -1486,21 +1540,16 @@
             const sysName = sysObj.name;
             const questions = [];
 
-            const mcStems = [
-                { stem: 'เส้นทางการส่งสัญญาณทางสรีรวิทยาในส่วนนี้เริ่มต้นจากโครงสร้างใดไปสิ้นสุดที่ใด', options: ['จากศูนย์ควบคุมส่วนกลาง ➔ ผ่านตัวส่งสัญญาณ ➔ เซลล์เป้าหมาย', 'จากอวัยวะส่วนปลาย ➔ ย้อนกลับไปยังหลอดเลือดใหญ่', 'จากเยื่อหุ้มเซลล์ ➔ สลายตัวในกระแสเลือดทันที', 'ไม่มีการส่งสัญญาณผ่านสารเคมี'], correct: 0 },
-                { stem: 'หากเกิดความผิดปกติในระดับพยาธิวิทยาของอวัยวะหลักในระบบนี้ ผู้ป่วยจะแสดงอาการสำคัญอย่างไร', options: ['เกิดภาวะเสียสมดุลการทำงานและแสดงอาการเฉพาะตามอวัยวะที่ขาดหรือเกิน', 'ไม่มีการเปลี่ยนแปลงของสัญญาณชีพและผลแล็บ', 'ระดับฮอร์โมนในเลือดจะลดลงเป็นศูนย์ทันที', 'ไม่ส่งผลกระทบต่อระบบอื่นในร่างกาย'], correct: 0 },
-                { stem: 'พยาบาลควรเลือกใช้การตรวจประเมินทางคลินิกใดเป็นอันดับแรกในการดูแลผู้ป่วยระบบนี้', options: ['ประเมินสัญญาณชีพ สังเกตอาการแสดงเฉพาะ และตรวจผลทางห้องปฏิบัติการที่เกี่ยวข้อง', 'งดให้อาหารและน้ำทันทีโดยไม่ประเมินอาการ', 'เจาะเลือดส่งตรวจพันธุกรรมทุกราย', 'จำกัดการเคลื่อนไหวของผู้ป่วยบนเตียงอย่างเดียว'], correct: 0 },
-                { stem: 'กลไกทางชีวเคมีในการควบคุมสมดุลสารในเลือดของระบบนี้ใช้หลักการใด', options: ['กลไกป้อนกลับแบบลบ (Negative Feedback Mechanism)', 'การสะสมสารพิษในเนื้อเยื่ออย่างถาวร', 'การยับยั้งการหายใจระดับเซลล์', 'การกระตุ้นเอนไซม์โดยไม่หยุดยั้ง'], correct: 0 }
-            ];
+            const subjectiveIndices = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45];
+            let mcCounter = 0;
+            let subjCounter = 0;
 
             for (let i = 1; i <= 50; i++) {
-                const isSubjective = (i % 3 === 0);
-
-                if (isSubjective) {
-                    const clueObj = KEYWORD_CLUES_BANK[((i / 3) - 1) % KEYWORD_CLUES_BANK.length];
+                if (subjectiveIndices.includes(i)) {
+                    const clueObj = KEYWORD_CLUES_BANK_15[subjCounter % KEYWORD_CLUES_BANK_15.length];
+                    subjCounter++;
                     const charLen = clueObj.name.length;
 
-                    // Cleaned Title without parentheses like (อัตนัย)
                     questions.push({
                         id: `exam-${sysId}-${i}`,
                         type: 'subjective',
@@ -1511,15 +1560,16 @@
                         explanation: `อวัยวะตรงกับคีย์เวิร์ดคือ "${clueObj.name}" (คำตอบตรงตามชื่อทางกายวิภาคศาสตร์ มีจำนวน ${charLen} ตัวอักษร)`
                     });
                 } else {
-                    const stemObj = mcStems[(i - 1) % mcStems.length];
-                    // Cleaned Title without parentheses like (ปรนัย)
+                    const mcObj = UNIQUE_MC_BANK_35[mcCounter % UNIQUE_MC_BANK_35.length];
+                    mcCounter++;
+
                     questions.push({
                         id: `exam-${sysId}-${i}`,
                         type: 'mc',
-                        title: `ข้อที่ ${i}: ใน${sysName} ${stemObj.stem}`,
-                        options: stemObj.options,
-                        correctIndex: stemObj.correct,
-                        explanation: `คำตอบที่ถูกต้องคือข้อ ก. เนื่องจากเป็นหลักการทางสรีรวิทยาและกายวิภาคศาสตร์ที่ถูกต้องของการทำงานใน${sysName}`
+                        title: `ข้อที่ ${i}: ${mcObj.stem}`,
+                        options: mcObj.options,
+                        correctIndex: mcObj.correctIndex,
+                        explanation: mcObj.explanation
                     });
                 }
             }
@@ -1546,7 +1596,6 @@
             const pct = Math.round(((currentExamIndex + 1) / activeExamQuestions.length) * 100);
             document.getElementById('exam-progress-bar').style.width = `${pct}%`;
 
-            // Display clean title without (ปรนัย) or (อัตนัย)
             document.getElementById('exam-question-title').innerText = q.title;
 
             const mcContainer = document.getElementById('exam-container-mc');
