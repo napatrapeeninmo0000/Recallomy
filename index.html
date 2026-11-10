@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomy Nursing Academy - ระบบทบทวนและทดสอบกายวิภาคศาสตร์พยาบาล</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nursing: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0a3650',
+                        },
+                        fisherman: {
+                            green: '#289667',
+                            darkGreen: '#1b6947',
+                            lightBg: '#f2f4f7'
+                        },
+                        medical: {
+                            teal: '#0d9488',
+                            rose: '#e11d48',
+                            emerald: '#059669',
+                            amber: '#d97706',
+                            purple: '#7c3aed'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+            color: #1e293b;
+        }
+
+        /* Paper Stack Shadow Effects for Fisherman Flashcard */
+        .paper-stack-base {
+            position: relative;
+        }
+        .paper-stack-base::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            right: 8px;
+            bottom: -6px;
+            background: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            z-index: 1;
+        }
+        .paper-stack-base::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            right: 16px;
+            bottom: -12px;
+            background: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Toast notification animation */
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+        .animate-toast {
+            animation: fadeInOut 3s forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-fisherman-green selection:text-white">
+
+    <!-- TOP NAVBAR -->
+    <header id="main-header" class="bg-nursing-800 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+                <div class="w-10 h-10 rounded-full bg-white text-nursing-800 flex items-center justify-center font-bold text-xl shadow">
+                    <i class="fa-solid fa-user-nurse"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">Anatomy Nursing Academy</h1>
+                    <p class="text-xs text-nursing-100 font-light">ระบบทบทวน &amp; คลังสอบกายวิภาคศาสตร์พยาบาล</p>
+                </div>
+            </div>
+
+            <!-- User Info Badge & Quick Actions -->
+            <div id="user-header-info" class="hidden flex items-center space-x-3">
+                <div class="text-right hidden sm:block">
+                    <div id="header-user-name" class="text-sm font-semibold text-white">นรพ.สมหญิง สุดสวย</div>
+                    <div id="header-user-id" class="text-xs text-nursing-100">รหัสประจำตัว: 63069</div>
+                </div>
+                <button onclick="navigateTo('profile')" class="p-2 bg-nursing-700 hover:bg-nursing-600 rounded-lg text-white transition flex items-center gap-2 text-sm shadow" title="ตัวตนของฉัน">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span class="hidden md:inline">โปรไฟล์</span>
+                </button>
+                <button onclick="logout()" class="p-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-white transition text-sm shadow" title="ออกจากระบบ">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 pointer-events-none space-y-2"></div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- 1. LOGIN / REGISTRATION SCREEN -->
+        <section id="screen-login" class="max-w-md mx-auto my-8 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-nursing-800 to-nursing-600 p-6 text-white text-center relative">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm">
+                    <i class="fa-solid fa-graduation-cap text-3xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold">เข้าสู่ระบบนักเรียนพยาบาล</h2>
+                <p class="text-xs text-nursing-100 mt-1">ลงชื่อเข้าใช้งานเพื่อสะสมคะแนนและบันทึกประวัติการทบทวน</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" class="p-6 space-y-5">
+                <!-- Prefix & Full Name -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">คำนำหน้า และ ชื่อ - นามสกุล</label>
+                    <div class="flex rounded-lg shadow-sm">
+                        <select id="input-prefix" class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-slate-300 bg-slate-100 text-slate-700 font-semibold text-sm focus:ring-2 focus:ring-nursing-500 focus:outline-none cursor-pointer">
+                            <option value="นรพ.">นรพ.</option>
+                            <option value="นรพ.(ช)">นรพ.(ช)</option>
+                        </select>
+                        <input type="text" id="input-fullname" required placeholder="สมหญิง สุดสวย"
+                            class="flex-1 min-w-0 block w-full px-3 py-2.5 rounded-none rounded-r-lg border border-slate-300 focus:ring-2 focus:ring-nursing-500 focus:border-nursing-500 text-sm">
+                    </div>
+                </div>
+
+                <!-- 5-Digit Student ID Range 63001 - 63080 -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">รหัสประจำตัวนักศึกษา (63001 - 63080)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-hashtag"></i>
+                        </div>
+                        <input type="text" id="input-studentid" required maxlength="5" pattern="\d{5}" placeholder="63069"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            class="block w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-nursing-500 focus:border-nursing-500 text-sm font-mono text-base tracking-widest">
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">* กรอกเฉพาะรหัสนักศึกษาพยาบาลช่วง 63001 ถึง 63080 เท่านั้น</p>
+                </div>
+
+                <!-- Info Notice -->
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start space-x-2 text-xs text-amber-800">
+                    <i class="fa-solid fa-circle-info text-amber-600 mt-0.5"></i>
+                    <div>
+                        <strong>ระบบจดจำผู้ใช้:</strong> หากเคยลงชื่อด้วยรหัส 5 หลักเดิม ระบบจะดึงข้อมูลประวัติการสอบและพัฒนาการเดิมมาแสดงทันที
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 px-4 bg-nursing-700 hover:bg-nursing-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2">
+                    <span>เข้าสู่ระบบ / ลงชื่อเข้าใช้งาน</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. DASHBOARD / MODE SELECTION -->
+        <section id="screen-dashboard" class="hidden space-y-6">
+            <!-- Welcome Banner -->
+            <div class="bg-gradient-to-r from-nursing-700 via-nursing-600 to-fisherman-green text-white rounded-2xl p-6 sm:p-8 shadow-lg relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 text-white/10 text-9xl pointer-events-none">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="relative z-10">
+                    <span class="inline-block bg-white/20 px-3 py-1 rounded-full text-xs font-semibold mb-2 backdrop-blur-sm">
+                        <i class="fa-solid fa-check-circle mr-1"></i> เข้าสู่ระบบสำเร็จ
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight" id="dash-welcome-title">
+                        สวัสดี นรพ.สมหญิง สุดสวย
+                    </h2>
+                    <p class="text-sm sm:text-base text-nursing-100 mt-1" id="dash-welcome-id">
+                        รหัสประจำตัวนักศึกษา: 63069
+                    </p>
+                    <p class="text-xs text-nursing-100/90 mt-3 max-w-2xl">
+                        เลือกทบทวนบทเรียนผ่าน Flashcards ดีไซน์ตามมาตรฐาน Fisherman Education หรือเข้าสอบประเมินผลความรู้ 50 ข้อเพื่อเก็บประวัติสถิติ
+                    </p>
+                </div>
+            </div>
+
+            <!-- Menu Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Flashcard Mode Card -->
+                <div onclick="navigateTo('flashcard-select')"
+                    class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-fisherman-green flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 group-hover:text-fisherman-green transition">📇 โหมดทบทวนความรู้</h3>
+                        <p class="text-xs text-slate-500 mt-1 font-semibold">Fisherman Flashcards Style</p>
+                        <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                            เลือกระบบอวัยวะที่ต้องการทบทวน แล้วเลือกทบทวนระหว่าง "พาร์ททบทวนระบบกายวิภาคศาสตร์" หรือ "พาร์ททบทวนระบบสรีรวิทยา"
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-fisherman-green font-semibold text-sm">
+                        <span>เริ่มทบทวนแฟลชการ์ด</span>
+                        <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Examination Mode Card -->
+                <div onclick="navigateTo('exam-select')"
+                    class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-100 text-nursing-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-file-signature"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 group-hover:text-nursing-600 transition">📝 โหมดทำแบบทดสอบ</h3>
+                        <p class="text-xs text-slate-500 mt-1 font-semibold">Examination (MC + Keyword Identification)</p>
+                        <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                            ทดสอบ 50 ข้อจับเวลาสด ผสมปรนัยและอัตนัยวิเคราะห์คีย์เวิร์ดอวัยวะ 4 มิติ (ตำแหน่ง/หน้าที่/ใกล้เคียง/ลักษณะเด่น)
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-nursing-600 font-semibold text-sm">
+                        <span>เข้าสู่ห้องทดสอบ</span>
+                        <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- My Profile Card -->
+                <div onclick="navigateTo('profile')"
+                    class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-purple-100 text-medical-purple flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 group-hover:text-medical-purple transition">📊 ตัวตนของฉัน</h3>
+                        <p class="text-xs text-slate-500 mt-1 font-semibold">My Profile &amp; Score History</p>
+                        <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                            ดูสรุปสถิติคะแนนสอบย้อนหลัง วัน/เวลาที่สอบ เวลาที่ใช้ในการสอบ และรายงานพัฒนาการความพร้อมในแต่ละระบบอวัยวะ
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-medical-purple font-semibold text-sm">
+                        <span>ดูสถิติและประวัติ</span>
+                        <i class="fa-solid fa-chevron-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. FLASHCARD SELECTION STEPPER (MODIFIED FLOW) -->
+        <section id="screen-flashcard-select" class="hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+                </button>
+                <div class="text-center">
+                    <h2 class="font-bold text-slate-800 text-lg">📇 เลือกบทเรียนแฟลชการ์ด</h2>
+                    <p class="text-xs text-slate-500">ขั้นที่ 1: เลือกระบบอวัยวะ &gt; ขั้นที่ 2: เลือกพาร์ททบทวน (กายวิภาคศาสตร์ / สรีรวิทยา)</p>
+                </div>
+                <div class="w-20"></div>
+            </div>
+
+            <!-- Step 1: System Selection -->
+            <div id="fc-step-1" class="space-y-4">
+                <h3 class="font-bold text-slate-700 text-base flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-fisherman-green text-white text-xs flex items-center justify-center font-bold">1</span>
+                    เลือกระบบอวัยวะที่ต้องการทบทวน (Organ Systems)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3" id="system-grid-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Step 2: 2 Main Knowledge Parts Only (Anatomy vs Physiology) -->
+            <div id="fc-step-2" class="space-y-4 hidden">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-slate-700 text-base flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-fisherman-green text-white text-xs flex items-center justify-center font-bold">2</span>
+                        เลือกพาร์ทที่ต้องการทบทวน (<span id="selected-system-label" class="text-fisherman-green font-bold"></span>)
+                    </h3>
+                    <button onclick="resetFcStep(1)" class="text-xs text-fisherman-green font-semibold hover:underline">เปลี่ยนระบบอวัยวะ</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <!-- Anatomy Review Part Card -->
+                    <div onclick="startFcDeck('anatomy')"
+                        class="bg-white rounded-2xl p-6 sm:p-8 border-2 border-slate-200 hover:border-fisherman-green shadow-sm hover:shadow-xl transition duration-300 cursor-pointer group flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-fisherman-green flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-sitemap"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-emerald-50 text-fisherman-green font-bold text-xs uppercase tracking-wider">
+                                Part 1: Structural Study
+                            </span>
+                            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800 mt-2 group-hover:text-fisherman-green transition">
+                                🦴 ทบทวนระบบกายวิภาคศาสตร์ (Anatomy)
+                            </h3>
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                เน้นทบทวนตำแหน่ง โครงสร้าง อวัยวะที่เกี่ยวข้อง ส่วนประกอบ ย่อย/แกนกลาง รอยต่อ เนื้อเยื่อ และความสัมพันธ์ของอวัยวะในระบบนี้
+                            </p>
+                        </div>
+                        <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-fisherman-green font-bold text-sm">
+                            <span>เริ่มทบทวนพาร์ทกายวิภาคศาสตร์ (30+ แฟลชการ์ด)</span>
+                            <i class="fa-solid fa-circle-arrow-right text-lg group-hover:translate-x-1 transition"></i>
+                        </div>
+                    </div>
+
+                    <!-- Physiology Review Part Card -->
+                    <div onclick="startFcDeck('physiology')"
+                        class="bg-white rounded-2xl p-6 sm:p-8 border-2 border-slate-200 hover:border-nursing-600 shadow-sm hover:shadow-xl transition duration-300 cursor-pointer group flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 rounded-2xl bg-sky-100 text-nursing-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-gears"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-sky-50 text-nursing-600 font-bold text-xs uppercase tracking-wider">
+                                Part 2: Functional & Mechanism Study
+                            </span>
+                            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800 mt-2 group-hover:text-nursing-600 transition">
+                                ⚙️ ทบทวนระบบสรีรวิทยา (Physiology)
+                            </h3>
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                                เน้นทบทวนกลไกการทำงาน เส้นทางการลำเลียง (เริ่มต้นจากอวัยวะใดไปถึงอวัยวะใด) การดูดซึม สารฮอร์โมน การรักษาสมดุล และพยาธิสภาพ
+                            </p>
+                        </div>
+                        <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-nursing-600 font-bold text-sm">
+                            <span>เริ่มทบทวนพาร์ทสรีรวิทยา (30+ แฟลชการ์ด)</span>
+                            <i class="fa-solid fa-circle-arrow-right text-lg group-hover:translate-x-1 transition"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FLASHCARD DECK RUNNER -->
+        <section id="screen-flashcard-runner" class="hidden space-y-4 max-w-4xl mx-auto px-1 sm:px-4">
+            
+            <!-- iPad Top Bar Header -->
+            <div class="flex items-center justify-between px-2 py-2">
+                <!-- Left: Round Close Button '✕' -->
+                <button onclick="navigateTo('flashcard-select')" class="w-9 h-9 rounded-full bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center transition shadow-sm border border-slate-200" title="ปิด / ย้อนกลับ">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+
+                <!-- Center: Title -->
+                <div class="text-center">
+                    <h3 id="fc-top-system-title" class="font-extrabold text-slate-800 text-base sm:text-lg tracking-tight">
+                        20-ระบบต่อมไร้ท่อ
+                    </h3>
+                </div>
+
+                <!-- Right: 'กระดาษทด' & Options '...' -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="openScratchpad()" class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-full border border-slate-200 shadow-sm transition flex items-center gap-1.5">
+                        <span>กระดาษทด</span>
+                    </button>
+                    <button onclick="openOptionsModal()" class="w-9 h-9 rounded-full bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center transition shadow-sm border border-slate-200" title="ตัวเลือกเพิ่มเติม">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STACKED PAPER CARD CANVAS EFFECT -->
+            <div class="paper-stack-base relative pt-2 pb-4 px-2 sm:px-6">
+                <!-- Main Active Card Surface -->
+                <div id="fc-card-body" class="relative z-10 bg-white rounded-2xl border border-slate-200 shadow-md min-h-[460px] sm:min-h-[500px] flex flex-col justify-between p-5 sm:p-7 cursor-pointer select-none transition-all duration-200 hover:shadow-lg" onclick="toggleCardFlip()">
+                    
+                    <!-- Top Left Label Outside Banner ("คำถาม" or "คำตอบ") -->
+                    <div class="text-sm font-bold text-slate-500 mb-3 tracking-wide" id="fc-side-label">
+                        คำถาม
+                    </div>
+
+                    <!-- Green Banner Bar (#289667) -->
+                    <div class="bg-fisherman-green text-white px-4 py-2.5 rounded-md flex items-center justify-between shadow-xs">
+                        <div class="flex items-center space-x-2 font-bold text-xs sm:text-sm">
+                            <i class="fa-solid fa-leaf text-white"></i>
+                            <span>Fisherman Education</span>
+                        </div>
+                        <span id="fc-banner-system-name" class="text-xs text-white/95 font-medium">
+                            ระบบต่อมไร้ท่อ
+                        </span>
+                    </div>
+
+                    <!-- Sub-bar Watermark & Difficulty Stars -->
+                    <div class="flex items-center justify-between mt-3 mb-6 px-1">
+                        <span id="fc-watermark-tag" class="text-xs font-extrabold tracking-widest text-slate-300 uppercase">
+                            QUESTION
+                        </span>
+                        <div id="fc-stars-container" class="flex text-slate-300 text-xs sm:text-sm space-x-0.5">
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                            <i class="fa-solid fa-star text-amber-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- CENTER CONTENT AREA -->
+                    <div class="relative flex-grow flex flex-col items-center justify-center my-auto py-4 px-2 text-center">
+                        
+                        <!-- Light Faded Arrow Background Watermark -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+                            <svg width="280" height="280" viewBox="0 0 24 24" fill="currentColor" class="text-slate-900">
+                                <path d="M5 3l14 9-14 9V3z"/>
+                            </svg>
+                        </div>
+
+                        <!-- FRONT VIEW (QUESTION) -->
+                        <div id="fc-view-front" class="space-y-4 z-10 w-full max-w-xl">
+                            <h2 id="fc-question-text" class="text-xl sm:text-2xl font-semibold text-slate-800 leading-relaxed">
+                                ฮอร์โมนถูกลำเลียงผ่านทางไหน
+                            </h2>
+                        </div>
+
+                        <!-- BACK VIEW (ANSWER) -->
+                        <div id="fc-view-back" class="hidden space-y-4 z-10 w-full max-w-2xl text-center">
+                            <!-- Main Answer Heading -->
+                            <h2 id="fc-answer-title" class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug mb-3">
+                                ระบบไหลเวียนเลือด
+                            </h2>
+
+                            <!-- Explanation Text -->
+                            <div id="fc-answer-details" class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal text-slate-600 max-w-xl mx-auto space-y-2">
+                                <p>รายละเอียดการทำงานและการสังเคราะห์สารตามหลักวิชาชีพการพยาบาล...</p>
+                            </div>
+
+                            <!-- Anatomy Vector Diagram Box -->
+                            <div id="fc-diagram-container" class="mt-4 pt-3 max-w-md mx-auto">
+                                <div id="fc-diagram-box" class="w-full flex items-center justify-center">
+                                    <!-- Diagram SVG injected here -->
+                                </div>
+                                <div class="text-right mt-2">
+                                    <span id="fc-reference-tag" class="text-[10px] sm:text-xs text-slate-400 font-normal italic">
+                                        Campbell Biology
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Tap Hint -->
+                    <div class="text-center text-xs text-slate-300 font-normal pt-2">
+                        <span id="fc-flip-hint">แตะที่การ์ดเพื่อพลิกสลับคำถาม-คำตอบ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM PROGRESS & CONTROLS TOOLBAR -->
+            <div class="space-y-3 max-w-xl mx-auto pt-1">
+                <!-- Progress Indicator Bar -->
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-600 px-2">
+                        <span id="fc-progress-counter" class="text-xs">2/63</span>
+                    </div>
+                    <div class="w-full bg-slate-300/80 rounded-full h-1.5 overflow-hidden">
+                        <div id="fc-progress-bar" class="bg-slate-500 h-1.5 rounded-full transition-all duration-300" style="width: 3%"></div>
+                    </div>
+                </div>
+
+                <!-- Controls Buttons Toolbar -->
+                <div class="flex items-center justify-between px-4 py-2">
+                    <!-- Prev Button -->
+                    <button onclick="prevCard()" id="btn-fc-prev" class="flex items-center gap-1.5 text-slate-700 font-bold text-sm hover:text-fisherman-green transition">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <span>ก่อนหน้า</span>
+                    </button>
+
+                    <!-- Center Utility Icons -->
+                    <div class="flex items-center space-x-6 text-slate-500">
+                        <button onclick="speakCurrentCard()" class="hover:text-fisherman-green transition p-1" title="อ่านเสียงอ่าน">
+                            <i class="fa-solid fa-volume-high text-lg"></i>
+                        </button>
+                        <button onclick="shuffleDeck()" class="hover:text-fisherman-green transition p-1" title="สุ่มคำถาม">
+                            <i class="fa-solid fa-shuffle text-lg"></i>
+                        </button>
+                        <button onclick="toggleCardFlip()" class="hover:text-fisherman-green transition p-1" title="พลิกการ์ด">
+                            <i class="fa-solid fa-rotate text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Next Button -->
+                    <button onclick="nextCard()" id="btn-fc-next" class="flex items-center gap-1.5 text-slate-700 font-bold text-sm hover:text-fisherman-green transition">
+                        <span>ถัดไป</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FLASHCARD COMPLETED SCREEN -->
+        <section id="screen-flashcard-complete" class="hidden max-w-lg mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8 text-center space-y-6">
+            <div class="w-20 h-20 bg-emerald-100 text-fisherman-green rounded-full flex items-center justify-center mx-auto text-4xl shadow">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-extrabold text-slate-800">ทบทวนจบชุดเรียบร้อย!</h2>
+                <p class="text-sm text-slate-500 mt-1">คุณทบทวนครบทั้ง <span id="fc-finished-count" class="font-bold text-fisherman-green">30</span> ข้อในชุดนี้แล้ว</p>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600 text-left space-y-1.5">
+                <div><strong>ระบบอวัยวะ:</strong> <span id="fc-finish-system">ระบบต่อมไร้ท่อ</span></div>
+                <div><strong>พาร์ทความรู้:</strong> <span id="fc-finish-part" class="font-bold text-fisherman-green">พาร์ททบทวนระบบสรีรวิทยา</span></div>
+            </div>
+
+            <!-- 4 Required Action Options -->
+            <div class="space-y-2.5 pt-2">
+                <button onclick="restartDeck()" class="w-full py-3 bg-fisherman-green hover:bg-fisherman-darkGreen text-white font-semibold rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-rotate-right"></i> 1. กลับไปทบทวนแฟลชการ์ดอีกรอบ
+                </button>
+                <button onclick="resetFcStep(2)" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-layer-group"></i> 2. กลับไปหน้าเลือกพาร์ททบทวน (กายวิภาคฯ / สรีรวิทยา)
+                </button>
+                <button onclick="resetFcStep(1)" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-folder-tree"></i> 3. กลับไปหน้าเลือกระบบอวัยวะ
+                </button>
+                <button onclick="navigateTo('dashboard')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-house"></i> 4. กลับไปหน้าเลือกว่าจะเลือกทบทวนหรือทดสอบ
+                </button>
+            </div>
+        </section>
+
+        <!-- 6. EXAMINATION SELECTION SCREEN -->
+        <section id="screen-exam-select" class="hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+                </button>
+                <div class="text-center">
+                    <h2 class="font-bold text-slate-800 text-lg">📝 เลือกชุดแบบทดสอบกายวิภาคศาสตร์</h2>
+                    <p class="text-xs text-slate-500">แบบทดสอบรวม 50 ข้อ (จับเวลาทำข้อสอบสด)</p>
+                </div>
+                <div class="w-20"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="exam-system-grid">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- 7. EXAMINATION RUNNER SCREEN WITH LIVE TIMER -->
+        <section id="screen-exam-runner" class="hidden space-y-6 max-w-4xl mx-auto">
+            <!-- Exam Top Info Bar -->
+            <div class="bg-white px-5 py-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span id="exam-system-tag" class="px-3 py-1 rounded-full bg-fisherman-green/10 text-fisherman-green font-bold text-xs">
+                        ระบบย่อยอาหาร
+                    </span>
+                    <span id="exam-q-counter" class="text-sm font-bold text-slate-700">ข้อที่ 1 / 50</span>
+                    <span id="exam-timer-display" class="px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-mono font-bold text-xs flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-stopwatch animate-pulse"></i>
+                        <span id="exam-timer-text">00:00</span>
+                    </span>
+                </div>
+                <!-- Progress bar -->
+                <div class="w-full sm:w-56 bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div id="exam-progress-bar" class="bg-fisherman-green h-2 rounded-full transition-all duration-300" style="width: 2%"></div>
+                </div>
+            </div>
+
+            <!-- Question Box Container -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-md border border-slate-200 space-y-6">
+                <!-- Header Badge -->
+                <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                    <span id="exam-type-badge" class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-sky-100 text-nursing-700">
+                        เลือกตอบตัวเลือก
+                    </span>
+                    <span class="text-xs font-semibold text-slate-400">แบบทดสอบรวม 50 ข้อ</span>
+                </div>
+
+                <!-- Clean Question Title without (ปรนัย) or (อัตนัย) -->
+                <h3 id="exam-question-title" class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed">
+                    ข้อที่ 1: คำถามแบบทดสอบจะแสดงขึ้นมาตรงนี้...
+                </h3>
+
+                <!-- CONTAINER FOR MULTIPLE CHOICE (TYPE A) -->
+                <div id="exam-container-mc" class="space-y-3">
+                    <!-- 4 Choice Buttons rendered via JS -->
+                </div>
+
+                <!-- CONTAINER FOR ANATOMICAL KEYWORD CLUES (TYPE B / SUBJECTIVE) -->
+                <div id="exam-container-img" class="hidden space-y-5">
+                    <!-- 4-Dimensional Keyword Clues Container -->
+                    <div class="bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-inner relative border border-slate-700 space-y-4">
+                        <div class="text-xs font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-key"></i>
+                            <span>วิเคราะห์ข้อมูลคีย์เวิร์ดทางกายวิภาคศาสตร์ แล้วพิมพ์ระบุชื่ออวัยวะให้ถูกต้อง</span>
+                        </div>
+                        
+                        <!-- 4 Clues Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                            <div class="bg-slate-800/90 p-3.5 rounded-xl border border-slate-700 space-y-1">
+                                <span class="text-emerald-400 font-bold block">📍 ตำแหน่ง (Location):</span>
+                                <p id="exam-clue-location" class="text-slate-200 font-medium">-</p>
+                            </div>
+                            <div class="bg-slate-800/90 p-3.5 rounded-xl border border-slate-700 space-y-1">
+                                <span class="text-sky-400 font-bold block">⚙️ หน้าที่หลัก (Function):</span>
+                                <p id="exam-clue-function" class="text-slate-200 font-medium">-</p>
+                            </div>
+                            <div class="bg-slate-800/90 p-3.5 rounded-xl border border-slate-700 space-y-1">
+                                <span class="text-purple-400 font-bold block">🔗 อวัยวะใกล้เคียง (Adjacent):</span>
+                                <p id="exam-clue-adjacent" class="text-slate-200 font-medium">-</p>
+                            </div>
+                            <div class="bg-slate-800/90 p-3.5 rounded-xl border border-slate-700 space-y-1">
+                                <span class="text-amber-400 font-bold block">💡 ลักษณะเด่น (Distinctive Feature):</span>
+                                <p id="exam-clue-feature" class="text-slate-200 font-medium">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Form & Exact Character Count Badge -->
+                    <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 space-y-3">
+                        <div class="flex items-center justify-between text-xs text-sky-900 font-semibold">
+                            <span class="flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square text-nursing-600"></i>
+                                พิมพ์คำตอบชื่ออวัยวะให้ถูกต้องทุกตัวอักษร:
+                            </span>
+                            <span id="exam-char-count-badge" class="bg-nursing-600 text-white px-3 py-1 rounded-full text-xs font-mono font-bold shadow-sm">
+                                [คำตอบ X ตัวอักษร]
+                            </span>
+                        </div>
+                        <input type="text" id="exam-text-answer" placeholder="พิมพ์ชื่ออวัยวะภาษาไทย หรือ ทับศัพท์..."
+                            class="w-full px-4 py-3 rounded-lg border border-sky-300 focus:ring-2 focus:ring-nursing-500 focus:border-nursing-500 text-base font-semibold text-slate-800 shadow-sm">
+                        <p class="text-xs text-slate-500">* ไม่ต้องเว้นวรรค (คำตอบจะได้รับการตรวจสอบตามชื่อกายวิภาคศาสตร์)</p>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Controls -->
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100 gap-3">
+                    <button onclick="prevExamQuestion()" id="btn-exam-prev" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg text-sm transition">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> ย้อนกลับ
+                    </button>
+                    <button onclick="nextExamQuestion()" id="btn-exam-next" class="px-6 py-2.5 bg-fisherman-green hover:bg-fisherman-darkGreen text-white font-semibold rounded-lg text-sm shadow transition flex items-center gap-1">
+                        ข้อถัดไป <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. EXAMINATION RESULT SUMMARY -->
+        <section id="screen-exam-result" class="hidden space-y-6 max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden text-center">
+                <div id="result-status-header" class="bg-gradient-to-r from-emerald-600 to-teal-600 p-8 text-white space-y-2">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto text-4xl backdrop-blur-sm mb-2">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold" id="result-status-title">สอบผ่านเกณฑ์มาตรฐาน!</h2>
+                    <p class="text-sm text-emerald-100" id="result-user-subtitle">นรพ.สมหญิง สุดสวย (รหัส 63069)</p>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Big Score Display with Time Spent -->
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500 font-semibold">คะแนนที่ได้</span>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-1" id="res-score-num">45 / 50</div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500 font-semibold">คิดเป็นร้อยละ</span>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-fisherman-green mt-1" id="res-score-percent">90%</div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500 font-semibold">เกณฑ์ผ่าน (60%)</span>
+                            <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1" id="res-pass-badge">ผ่าน</div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500 font-semibold">เวลาที่ใช้ไป</span>
+                            <div class="text-xl sm:text-2xl font-extrabold text-amber-600 mt-2 font-mono" id="res-time-spent">00:00</div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 col-span-2 sm:col-span-1">
+                            <span class="text-xs text-slate-500 font-semibold">ระบบที่สอบ</span>
+                            <div class="text-sm sm:text-base font-bold text-slate-700 mt-2 truncate" id="res-system-name">ระบบต่อมไร้ท่อ</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                        <button onclick="navigateTo('profile')" class="w-full sm:w-auto px-6 py-3 bg-nursing-700 hover:bg-nursing-800 text-white font-semibold rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-chart-line"></i> ดูประวัติใน "ตัวตนของฉัน"
+                        </button>
+                        <button onclick="navigateTo('exam-select')" class="w-full sm:w-auto px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow transition flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-rotate"></i> สอบระบบอื่นเพิ่ม
+                        </button>
+                    </div>
+
+                    <!-- Itemized Answer Review Accordion -->
+                    <div class="text-left border-t border-slate-200 pt-6">
+                        <h3 class="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-fisherman-green"></i> เฉลยและวิเคราะห์ข้อสอบโดยรายละเอียด
+                        </h3>
+                        <div id="exam-review-list" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                            <!-- Items injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. MY PROFILE & SCORE HISTORY SCREEN -->
+        <section id="screen-profile" class="hidden space-y-6">
+            <div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> กลับหน้าหลัก
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">📊 ตัวตนของฉัน (My Profile &amp; Score History)</h2>
+                <div class="w-20"></div>
+            </div>
+
+            <!-- Profile Info Card -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-nursing-800 to-nursing-500 text-white flex items-center justify-center text-4xl shadow-lg">
+                        <i class="fa-solid fa-user-nurse"></i>
+                    </div>
+                    <div>
+                        <span class="px-2.5 py-0.5 rounded-full bg-nursing-100 text-nursing-700 text-xs font-bold">นักเรียนพยาบาล</span>
+                        <h3 class="text-2xl font-extrabold text-slate-800 mt-1" id="profile-full-name">นรพ.สมหญิง สุดสวย</h3>
+                        <p class="text-sm text-slate-500 font-mono" id="profile-id-code">รหัสประจำตัว: 63069</p>
+                    </div>
+                </div>
+
+                <!-- Stats Summary -->
+                <div class="grid grid-cols-3 gap-4 w-full md:w-auto text-center">
+                    <div class="bg-slate-50 p-3 px-5 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 block">สอบแล้ว</span>
+                        <span class="text-xl font-bold text-slate-800" id="prof-stat-count">0 ครั้ง</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 px-5 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 block">เฉลี่ยรวม</span>
+                        <span class="text-xl font-bold text-fisherman-green" id="prof-stat-avg">0%</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 px-5 rounded-xl border border-slate-200">
+                        <span class="text-xs text-slate-500 block">สูงสุด</span>
+                        <span class="text-xl font-bold text-emerald-600" id="prof-stat-max">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                <h3 class="font-bold text-slate-800 text-base flex items-center justify-between">
+                    <span><i class="fa-solid fa-clock-rotate-left text-fisherman-green mr-2"></i>บันทึกประวัติกิจกรรมและการสอบ</span>
+                    <span class="text-xs text-slate-400 font-normal">บันทึกอัตโนมัติลงใน LocalStorage</span>
+                </h3>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-100 text-xs uppercase text-slate-700 font-bold">
+                            <tr>
+                                <th class="p-3 rounded-l-lg">วัน-เวลา</th>
+                                <th class="p-3">ระบบอวัยวะ</th>
+                                <th class="p-3 text-center">คะแนนเต็ม 50</th>
+                                <th class="p-3 text-center">คิดเป็นร้อยละ</th>
+                                <th class="p-3 text-center">เวลาที่ใช้</th>
+                                <th class="p-3 text-center rounded-r-lg">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profile-history-rows" class="divide-y divide-slate-100">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="profile-empty-msg" class="text-center py-8 text-slate-400 text-sm hidden">
+                    <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
+                    ยังไม่มีประวัติการทำแบบทดสอบ เริ่มทำแบบทดสอบแรกของคุณตอนนี้!
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRATCHPAD MODAL (กระดาษทด) -->
+    <div id="modal-scratchpad" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col h-[75vh]">
+            <!-- Modal Header -->
+            <div class="bg-slate-800 text-white px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-2 font-bold text-sm">
+                    <i class="fa-solid fa-pen-to-square text-fisherman-green"></i>
+                    <span>กระดาษทดสำหรับเขียน/วาดโน้ต</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="clearScratchpad()" class="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded transition">
+                        <i class="fa-solid fa-trash mr-1"></i> ล้างกระดาษ
+                    </button>
+                    <button onclick="closeScratchpad()" class="w-8 h-8 rounded-full bg-slate-700 hover:bg-slate-600 text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="flex-grow bg-amber-50/40 relative cursor-crosshair">
+                <canvas id="scratchpad-canvas" class="w-full h-full block"></canvas>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="bg-slate-100 p-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-2">
+                    <span class="font-semibold text-slate-600">สีปากกา:</span>
+                    <button onclick="setPenColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 border-2 border-white shadow"></button>
+                    <button onclick="setPenColor('#dc2626')" class="w-6 h-6 rounded-full bg-red-600 border-2 border-white shadow"></button>
+                    <button onclick="setPenColor('#2563eb')" class="w-6 h-6 rounded-full bg-blue-600 border-2 border-white shadow"></button>
+                    <button onclick="setPenColor('#289667')" class="w-6 h-6 rounded-full bg-fisherman-green border-2 border-white shadow"></button>
+                </div>
+                <span class="text-slate-400">ใช้นิ้วหรือเมาส์วาดเขียนทดเลขได้ฟรีสไตล์</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTIONS MODAL ('...') -->
+    <div id="modal-options" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xs overflow-hidden p-5 space-y-4 text-center">
+            <h3 class="font-bold text-slate-800 text-base border-b border-slate-100 pb-2">ตัวเลือกแฟลชการ์ด</h3>
+            <div class="space-y-2 text-sm">
+                <button onclick="toggleCardFlip(); closeOptionsModal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg">
+                    <i class="fa-solid fa-rotate mr-2"></i> พลิกสลับหน้าการ์ด
+                </button>
+                <button onclick="speakCurrentCard(); closeOptionsModal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg">
+                    <i class="fa-solid fa-volume-high mr-2"></i> อ่านออกเสียง (TTS)
+                </button>
+                <button onclick="shuffleDeck(); closeOptionsModal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg">
+                    <i class="fa-solid fa-shuffle mr-2"></i> สุ่มลำดับคำถาม
+                </button>
+                <button onclick="restartDeck(); closeOptionsModal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> เริ่มใหม่ตั้งแต่ข้อแรก
+                </button>
+            </div>
+            <button onclick="closeOptionsModal()" class="w-full py-2 bg-slate-800 text-white font-semibold rounded-lg text-xs">
+                ปิดหน้าต่าง
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-1.5">
+            <p class="font-semibold text-slate-300">Anatomy Nursing Academy &copy; 2026 - สื่อการทบทวนกายวิภาคศาสตร์เพื่อวิชาชีพการพยาบาล</p>
+            <p>ออกแบบตามมาตรฐาน Fisherman Education สำหรับนักศึกษาและนักเรียนพยาบาลทั่วประเทศ</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC & CONTENT DATABASE -->
+    <script>
+        /* ==========================================================================
+           1. APP STATE & LOCALSTORAGE MANAGEMENT
+           ========================================================================== */
+        let currentUser = null; // { prefix: 'นรพ.', name: 'สมหญิง สุดสวย', id: '63069', history: [] }
+
+        // Active Flashcard Deck State
+        let currentFcSystemId = null;
+        let currentFcPartId = null; // 'anatomy' or 'physiology'
+        let activeDeck = [];
+        let currentFcIndex = 0;
+        let isCardFlipped = false;
+
+        // Active Exam State & Timer
+        let currentExamSystemId = null;
+        let activeExamQuestions = [];
+        let currentExamIndex = 0;
+        let userExamAnswers = {}; // { questionIndex: answerValue }
+        let examTimerInterval = null;
+        let examSecondsElapsed = 0;
+
+        window.onload = function() {
+            const lastActiveId = localStorage.getItem('anatomy_active_user_id');
+            if (lastActiveId) {
+                const userData = loadUserData(lastActiveId);
+                if (userData) {
+                    currentUser = userData;
+                    updateHeaderInfo();
+                    navigateTo('dashboard');
+                    return;
+                }
+            }
+            navigateTo('login');
+        };
+
+        function getStorageKey(studentId) {
+            return `anatomy_user_${studentId}`;
+        }
+
+        function loadUserData(studentId) {
+            const raw = localStorage.getItem(getStorageKey(studentId));
+            if (!raw) return null;
+            try { return JSON.parse(raw); } catch(e) { return null; }
+        }
+
+        function saveUserData() {
+            if (!currentUser || !currentUser.id) return;
+            localStorage.setItem(getStorageKey(currentUser.id), JSON.stringify(currentUser));
+            localStorage.setItem('anatomy_active_user_id', currentUser.id);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const prefixInput = document.getElementById('input-prefix').value;
+            const nameInput = document.getElementById('input-fullname').value.trim();
+            const idInput = document.getElementById('input-studentid').value.trim();
+
+            if (!nameInput) {
+                showToast('กรุณากรอก ชื่อ-นามสกุล');
+                return;
+            }
+
+            const idNum = parseInt(idInput, 10);
+            if (isNaN(idNum) || idNum < 63001 || idNum > 63080) {
+                showToast('รหัสนักศึกษาต้องเป็นตัวเลขระหว่าง 63001 ถึง 63080 เท่านั้น');
+                return;
+            }
+
+            let existing = loadUserData(idInput);
+            if (existing) {
+                currentUser = existing;
+                currentUser.prefix = prefixInput || existing.prefix || 'นรพ.';
+                currentUser.name = nameInput;
+            } else {
+                currentUser = {
+                    prefix: prefixInput,
+                    name: nameInput,
+                    id: idInput,
+                    registeredAt: new Date().toISOString(),
+                    history: []
+                };
+            }
+
+            saveUserData();
+            updateHeaderInfo();
+            navigateTo('dashboard');
+            showToast(`ยินดีต้อนรับ ${currentUser.prefix}${currentUser.name}`);
+        }
+
+        function logout() {
+            stopExamTimer();
+            localStorage.removeItem('anatomy_active_user_id');
+            currentUser = null;
+            document.getElementById('user-header-info').classList.add('hidden');
+            navigateTo('login');
+        }
+
+        function updateHeaderInfo() {
+            if (!currentUser) return;
+            document.getElementById('user-header-info').classList.remove('hidden');
+            document.getElementById('header-user-name').innerText = `${currentUser.prefix}${currentUser.name}`;
+            document.getElementById('header-user-id').innerText = `รหัสประจำตัว: ${currentUser.id}`;
+
+            document.getElementById('dash-welcome-title').innerText = `สวัสดี ${currentUser.prefix}${currentUser.name}`;
+            document.getElementById('dash-welcome-id').innerText = `รหัสประจำตัวนักศึกษา: ${currentUser.id}`;
+
+            document.getElementById('profile-full-name').innerText = `${currentUser.prefix}${currentUser.name}`;
+            document.getElementById('profile-id-code').innerText = `รหัสประจำตัว: ${currentUser.id}`;
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-800 text-white text-xs px-4 py-2.5 rounded-xl shadow-lg animate-toast border border-slate-700 font-semibold';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
+        }
+
+        function startExamTimer() {
+            stopExamTimer();
+            examSecondsElapsed = 0;
+            updateTimerDisplay();
+            examTimerInterval = setInterval(() => {
+                examSecondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopExamTimer() {
+            if (examTimerInterval) {
+                clearInterval(examTimerInterval);
+                examTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const el = document.getElementById('exam-timer-text');
+            if (el) el.innerText = formatTimeSpent(examSecondsElapsed);
+        }
+
+        function formatTimeSpent(totalSec) {
+            const m = Math.floor(totalSec / 60);
+            const s = totalSec % 60;
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function navigateTo(screenId) {
+            const screens = [
+                'screen-login', 'screen-dashboard', 'screen-flashcard-select',
+                'screen-flashcard-runner', 'screen-flashcard-complete',
+                'screen-exam-select', 'screen-exam-runner', 'screen-exam-result', 'screen-profile'
+            ];
+            screens.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.classList.add('hidden');
+            });
+
+            const target = document.getElementById(`screen-${screenId}`);
+            if (target) target.classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (screenId === 'flashcard-select') renderFcStep1();
+            if (screenId === 'exam-select') renderExamSelection();
+            if (screenId === 'profile') renderProfileHistory();
+        }
+
+        /* ==========================================================================
+           2. ORGAN SYSTEMS DATABASE (11 SYSTEMS)
+           ========================================================================== */
+        const ORGAN_SYSTEMS = [
+            { id: 'endocrine', code: '20', name: 'ระบบต่อมไร้ท่อ', icon: 'fa-vial-virus', color: 'bg-emerald-500' },
+            { id: 'skeletal', code: '01', name: 'ระบบโครงกระดูก', icon: 'fa-bone', color: 'bg-amber-500' },
+            { id: 'muscular', code: '02', name: 'ระบบกล้ามเนื้อ', icon: 'fa-child-reaching', color: 'bg-rose-500' },
+            { id: 'nervous', code: '03', name: 'ระบบประสาท', icon: 'fa-brain', color: 'bg-purple-500' },
+            { id: 'circulatory', code: '04', name: 'ระบบไหลเวียนเลือด', icon: 'fa-heart-pulse', color: 'bg-red-500' },
+            { id: 'respiratory', code: '05', name: 'ระบบหายใจ', icon: 'fa-lungs', color: 'bg-sky-500' },
+            { id: 'digestive', code: '06', name: 'ระบบย่อยอาหาร', icon: 'fa-stroopwafel', color: 'bg-orange-500' },
+            { id: 'urinary', code: '07', name: 'ระบบขับถ่ายปัสสาวะ', icon: 'fa-filter', color: 'bg-teal-500' },
+            { id: 'reproductive', code: '08', name: 'ระบบสืบพันธุ์', icon: 'fa-venus-mars', color: 'bg-pink-500' },
+            { id: 'immune', code: '09', name: 'ระบบภูมิคุ้มกัน', icon: 'fa-shield-halved', color: 'bg-indigo-500' },
+            { id: 'integumentary', code: '10', name: 'ระบบปกคลุมร่างกาย', icon: 'fa-hand', color: 'bg-yellow-600' }
+        ];
+
+        /* ==========================================================================
+           3. FLASHCARD GENERATOR (ANATOMY VS PHYSIOLOGY EXCLUSIVE PARTS)
+           ========================================================================== */
+        const ANATOMY_QUESTIONS_BANK = {
+            endocrine: [
+                { q: 'ต่อมใต้สมอง (Pituitary Gland) วางตัวอยู่ในโครงสร้างกะโหลกศีรษะใด และแบ่งโครงสร้างเป็นกี่ส่วน', a: 'ตั้งอยู่ในแอ่ง Sella Turcica ของกระดูก Sphenoid Bone แบ่งเป็น 2 ส่วนหลักคือ Anterior Pituitary (Adenohypophysis) และ Posterior Pituitary (Neurohypophysis)', d: 3 },
+                { q: 'ต่อมหมวกไต (Adrenal Gland) แบ่งโครงสร้างกายวิภาคศาสตร์เป็นกี่ชั้นหลัก', a: 'แบ่งเป็น 2 ชั้น:\n1. Adrenal Cortex (ชั้นนอก): แบ่งย่อยเป็น Zona Glomerulosa, Fasciculata, Reticularis\n2. Adrenal Medulla (ชั้นใน): เป็นเนื้อเยื่อประสาทเปลี่ยนรูป', d: 2 },
+                { q: 'ต่อมไทรอยด์ (Thyroid Gland) มีลักษณะทางกายวิภาคและการวางตำแหน่งอย่างไร', a: 'วางตัวอยู่หน้าต่อหลอดลม (Trachea) ใต้ต่อลูกกระเดือก มีลักษณะคล้ายผีเสื้อ (Butterfly-shaped) ประกอบด้วย Left & Right Lobes เชื่อมกันด้วย Isthmus', d: 2 },
+                { q: 'ต่อมพาราไทรอยด์ (Parathyroid Glands) มีจำนวนกี่ต่อมและตั้งอยู่ ณ ตำแหน่งใด', a: 'มีจำนวน 4 ต่อมขนาดเล็ก ฝังอยู่ทางด้านหลัง (Posterior surface) ของพูต่อมไทรอยด์ข้างละ 2 ต่อม (Superior & Inferior)', d: 3 }
+            ],
+            skeletal: [
+                { q: 'โครงกระดูกแกนกลาง (Axial Skeleton) ประกอบด้วยกระดูกรวมกี่ชิ้น และมีส่วนใดบ้าง', a: 'มีจำนวนรวม 80 ชิ้น ประกอบด้วย กระดูกกะโหลกศีรษะ (Skull 22 ชิ้น), กระดูกหู (Auditory ossicles 6 ชิ้น), กระดูกโคนลิ้น (Hyoid 1 ชิ้น), กระดูกสันหลัง (Vertebral column 26 ชิ้น), กระดูกอก (Sternum 1 ชิ้น) และกระดูกซี่โครง (Ribs 24 ชิ้น)', d: 4 },
+                { q: 'โครงกระดูกรยางค์ (Appendicular Skeleton) ประกอบด้วยกระดูกกี่ชิ้น', a: 'มีจำนวนรวม 126 ชิ้น ประกอบด้วย กระดูกไหล่ (Pectoral girdle), กระดูกแขนและมือ (Upper limbs), กระดูกเชิงกราน (Pelvic girdle) และกระดูกขาและเท้า (Lower limbs)', d: 3 },
+                { q: 'รอยต่อกะโหลกศีรษะ (Sutures) ที่สำคัญมีอะไรบ้าง และกั้นระหว่างกระดูกชิ้นใด', a: '1. Coronal Suture: กั้นระหว่าง Frontal และ Parietal\n2. Sagittal Suture: กั้นระหว่าง Parietal สองข้าง\n3. Lambdoid Suture: กั้นระหว่าง Parietal และ Occipital\n4. Squamous Suture: กั้นระหว่าง Parietal และ Temporal', d: 4 }
+            ],
+            circulatory: [
+                { q: 'หัวใจมีลิ้นหัวใจ (Heart Valves) กี่จุด และแต่ละจุดกั้นระหว่างห้องใดบ้าง', a: 'มี 4 จุดหลัก:\n1. Tricuspid Valve: กั้นระหว่าง Right Atrium และ Right Ventricle\n2. Bicuspid (Mitral) Valve: กั้นระหว่าง Left Atrium และ Left Ventricle\n3. Pulmonary Valve: กั้นระหว่าง Right Ventricle และ Pulmonary Artery\n4. Aortic Valve: กั้นระหว่าง Left Ventricle และ Aorta', d: 3 }
+            ]
+        };
+
+        const PHYSIOLOGY_QUESTIONS_BANK = {
+            endocrine: [
+                { q: 'ลำดับกระบวนการส่งสัญญาณการหลั่งฮอร์โมนในกลไก Negative Feedback ของต่อมไทรอยด์เริ่มจากอวัยวะใดไปอวัยวะใด', a: 'Hypothalamus (หลั่ง TRH) ➔ กระตุ้น ต่อมใต้สมองส่วนหน้า (หลั่ง TSH) ➔ กระตุ้น ต่อมไทรอยด์ (หลั่ง T3/T4) ➔ เมื่อระดับ T3/T4 ในเลือดสูงจะย้อนกลับไปยับยั้ง Hypothalamus และ Pituitary', d: 3 },
+                { q: 'กลไกการออกฤทธิ์ของฮอร์โมนกลุ่มเปปไทด์ (Peptide Hormones) ต่อเซลล์เป้าหมายเป็นอย่างไร', a: 'หลั่งเข้ากระแสเลือด ➔ จับกับ Receptor บนเยื่อหุ้มเซลล์เป้าหมาย ➔ กระตุ้น Second Messenger (เช่น cAMP) ➔ กระตุ้น Enzyme Cascade เกิดการตอบสนองของเซลล์', d: 3 },
+                { q: 'กลไกการทำงานของระบบ RAAS ในการเพิ่มความดันโลหิตมีลำดับอวัยวะอย่างไร', a: 'ไต (หลั่ง Renin) ➔ ตับ (หลั่ง Angiotensinogen ถูกเปลี่ยนเป็น Angiotensin I) ➔ ปอด (หลั่ง ACE เปลี่ยนเป็น Angiotensin II) ➔ ต่อมหมวกไต (หลั่ง Aldosterone ดูด Na+ และน้ำกลับเข้ากระแสเลือด)', d: 4 },
+                { q: 'การควบคุมระดับน้ำตาลในเลือดหลังมื้ออาหารมีกลไกสรีรวิทยาอย่างไร', a: 'ระดับน้ำตาลในเลือดสูง ➔ Beta cells ของตับอ่อนหลั่ง Insulin ➔ นำ Glucose เข้าเซลล์ตับและกล้ามเนื้อเพื่อเปลี่ยนเป็น Glycogen ➔ ระดับน้ำตาลในเลือดลดลงสู่ระดับปกติ', d: 2 }
+            ],
+            digestive: [
+                { q: 'ลำดับการเดินทางของอาหารผ่านทางเดินอาหาร (GI Tract Pathway) เริ่มจากอวัยวะใดไปสิ้นสุดที่อวัยวะใด', a: 'ช่องปาก (Mouth) ➔ คอหอย (Pharynx) ➔ หลอดอาหาร (Esophagus) ➔ กระเพาะอาหาร (Stomach) ➔ ลำไส้เล็ก (Duodenum ➔ Jejunum ➔ Ileum) ➔ ลำไส้ใหญ่ (Caecum ➔ Colon ➔ Rectum) ➔ ทวารหนัก (Anus)', d: 2 }
+            ],
+            circulatory: [
+                { q: 'ลำดับการเดินทางของกระแสไฟฟ้าหัวใจ (Cardiac Conduction Pathway) เริ่มจากจุดใดไปจุดใด', a: 'SA Node (Sinoatrial node) ➔ AV Node (Atrioventricular node) ➔ Bundle of His ➔ Right & Left Bundle Branches ➔ Purkinje Fibers', d: 3 },
+                { q: 'เส้นทางการไหลเวียนของเลือดดำจากร่างกายผ่านห้องหัวใจไปปอดและกลับไปเลี้ยงร่างกายเริ่มจากห้องใดไปห้องใด', a: 'Vena Cava ➔ Right Atrium ➔ Tricuspid Valve ➔ Right Ventricle ➔ Pulmonary Valve ➔ Pulmonary Artery ➔ ปอด ➔ Pulmonary Veins ➔ Left Atrium ➔ Mitral Valve ➔ Left Ventricle ➔ Aorta', d: 3 }
+            ]
+        };
+
+        function generateFlashcardDeck(sysId, partId) {
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === sysId) || ORGAN_SYSTEMS[0];
+            const sysName = sysObj.name;
+            const isAnatomy = (partId === 'anatomy');
+            const bank = isAnatomy ? ANATOMY_QUESTIONS_BANK : PHYSIOLOGY_QUESTIONS_BANK;
+
+            let deck = [];
+            if (bank[sysId]) {
+                bank[sysId].forEach(item => {
+                    deck.push({
+                        question: item.q,
+                        answer: item.a,
+                        difficulty: item.d || 3
+                    });
+                });
+            }
+
+            const dynamicTemplates = isAnatomy ? [
+                { q: 'ตำแหน่ง รอยต่อ และอวัยวะข้างเคียงของโครงสร้างหลักในระบบนี้ตั้งอยู่ ณ จุดใด', a: 'ตั้งอยู่บริเวณส่วนกลางของระบบ วางตัวเชื่อมต่อกับหลอดเลือดและเส้นประสาทเลี้ยงเฉพาะ โดยมีเนื้อเยื่อเกี่ยวพันหุ้มปกป้อง' },
+                { q: 'การแบ่งส่วนโครงสร้าง กายวิภาคย่อย และเยื่อหุ้มของอวัยวะในระบบนี้แบ่งอย่างไร', a: 'แบ่งออกเป็นส่วนภายนอก (Outer layer) ทำหน้าที่ป้องกัน และส่วนภายใน (Inner parenchyma) ประกอบด้วยเซลล์จำเพาะ' },
+                { q: 'ส่วนประกอบสำคัญทางกายวิภาคศาสตร์และหลอดเลือดที่มาเลี้ยงอวัยวะนี้คืออะไร', a: 'มีหลอดเลือดแดงหลักนำเลือดที่มีออกซิเจนมาเลี้ยง และมีแขนงเส้นประสาทอัตโนมัติมาควบคุมการทำงาน' }
+            ] : [
+                { q: 'ลำดับกลไกการทำงานเริ่มต้นจากอวัยวะรับสัญญาณไปถึงอวัยวะเป้าหมายดำเนินอย่างไร', a: 'เริ่มต้นจากจุดกระตุ้น ➔ ส่งสัญญาณผ่านสารเคมีหรือกระแสประสาท ➔ เข้าสู่เซลล์เป้าหมาย ➔ เกิดกระบวนการตอบสนองและปรับสมดุล' },
+                { q: 'กลไกการป้อนกลับ (Feedback Mechanism) ในการรักษาสมดุลของระบบนี้ทำงานอย่างไร', a: 'เมื่อระดับสารในเลือดเปลี่ยนแปลง จะส่งสัญญาณกลับไปยับยั้งหรือกระตุ้นต่อมต้นทาง เพื่อรักษาสมดุล Homeostasis' },
+                { q: 'หากเกิดภาวะพะวักพะวงหรือความผิดปกติทางสรีรวิทยา ร่างกายจะมีกลไกตอบสนองอย่างไร', a: 'ระบบประสาทซิมพาเทติกและฮอร์โมนความเครียดจะถูกหลั่ง เพื่อเพิ่มอัตราการเต้นของหัวใจและความดันโลหิต' }
+            ];
+
+            let count = deck.length + 1;
+            while (deck.length < 30) {
+                const template = dynamicTemplates[deck.length % dynamicTemplates.length];
+                deck.push({
+                    question: `[ข้อที่ ${count}] ทบทวน${isAnatomy ? 'กายวิภาคศาสตร์' : 'สรีรวิทยา'}ใน ${sysName}: ${template.q}`,
+                    answer: `สรุปสาระสำคัญทาง${isAnatomy ? 'กายวิภาคศาสตร์' : 'สรีรวิทยา'}ของ ${sysName}:\n${template.a} (ทบทวนความรู้เพื่อเตรียมสอบสภาการพยาบาล ข้อที่ ${count})`,
+                    difficulty: ((count % 5) + 1)
+                });
+                count++;
+            }
+
+            return deck;
+        }
+
+        /* ==========================================================================
+           4. FLASHCARD UI FLOW (STEP 1: SYSTEM -> STEP 2: ANATOMY OR PHYSIOLOGY ONLY)
+           ========================================================================== */
+        function renderFcStep1() {
+            document.getElementById('fc-step-1').classList.remove('hidden');
+            document.getElementById('fc-step-2').classList.add('hidden');
+
+            const container = document.getElementById('system-grid-container');
+            container.innerHTML = ORGAN_SYSTEMS.map(sys => `
+                <div onclick="selectFcSystem('${sys.id}')"
+                    class="bg-white rounded-xl p-4 border border-slate-200 shadow-xs hover:shadow-md hover:border-fisherman-green transition cursor-pointer text-center group">
+                    <div class="w-12 h-12 rounded-xl ${sys.color} text-white flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition">
+                        <i class="fa-solid ${sys.icon}"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-400 block">${sys.code}</span>
+                    <h4 class="font-bold text-slate-800 text-xs sm:text-sm group-hover:text-fisherman-green transition">${sys.name}</h4>
+                </div>
+            `).join('');
+        }
+
+        function selectFcSystem(sysId) {
+            currentFcSystemId = sysId;
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === sysId);
+            document.getElementById('selected-system-label').innerText = sysObj ? sysObj.name : '';
+
+            document.getElementById('fc-step-1').classList.add('hidden');
+            document.getElementById('fc-step-2').classList.remove('hidden');
+        }
+
+        function resetFcStep(step) {
+            if (step === 1) renderFcStep1();
+            if (step === 2) {
+                document.getElementById('fc-step-2').classList.remove('hidden');
+            }
+        }
+
+        function startFcDeck(partId) {
+            currentFcPartId = partId; // 'anatomy' or 'physiology'
+            activeDeck = generateFlashcardDeck(currentFcSystemId, currentFcPartId);
+            currentFcIndex = 0;
+            isCardFlipped = false;
+            navigateTo('flashcard-runner');
+            renderCurrentCard();
+        }
+
+        function renderCurrentCard() {
+            if (currentFcIndex >= activeDeck.length) {
+                showFcCompleted();
+                return;
+            }
+
+            const card = activeDeck[currentFcIndex];
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === currentFcSystemId);
+            const sysCode = sysObj ? sysObj.code : '20';
+            const sysName = sysObj ? sysObj.name : 'ระบบต่อมไร้ท่อ';
+
+            document.getElementById('fc-top-system-title').innerText = `${sysCode}-${sysName}`;
+            document.getElementById('fc-banner-system-name').innerText = sysName;
+
+            isCardFlipped = false;
+            document.getElementById('fc-side-label').innerText = 'คำถาม';
+            document.getElementById('fc-watermark-tag').innerText = 'QUESTION';
+            document.getElementById('fc-view-front').classList.remove('hidden');
+            document.getElementById('fc-view-back').classList.add('hidden');
+
+            document.getElementById('fc-progress-counter').innerText = `${currentFcIndex + 1}/${activeDeck.length}`;
+            const pct = Math.round(((currentFcIndex + 1) / activeDeck.length) * 100);
+            document.getElementById('fc-progress-bar').style.width = `${pct}%`;
+
+            const starsContainer = document.getElementById('fc-stars-container');
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= card.difficulty) {
+                    starsHtml += '<i class="fa-solid fa-star text-amber-400"></i>';
+                } else {
+                    starsHtml += '<i class="fa-regular fa-star text-slate-300"></i>';
+                }
+            }
+            starsContainer.innerHTML = starsHtml;
+
+            document.getElementById('fc-question-text').innerText = card.question;
+
+            const lines = card.answer.split('\n');
+            const mainTitle = lines[0] || card.answer;
+            const subDetail = lines.slice(1).join('<br>') || '';
+
+            document.getElementById('fc-answer-title').innerText = mainTitle;
+            document.getElementById('fc-answer-details').innerHTML = subDetail ? `<p>${subDetail}</p>` : '';
+
+            document.getElementById('fc-diagram-box').innerHTML = `
+                <svg viewBox="0 0 340 130" class="w-full h-32 max-w-sm mx-auto">
+                    <rect width="340" height="130" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                    <path d="M30,65 Q90,25 150,65 T270,65" fill="none" stroke="#289667" stroke-width="3"/>
+                    <circle cx="150" cy="65" r="18" fill="#e11d48" />
+                    <text x="150" y="69" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">Target Cell</text>
+                    <path d="M170,65 L245,65" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="3,3"/>
+                    <rect x="240" y="52" width="75" height="26" rx="5" fill="#fbbf24"/>
+                    <text x="277" y="68" text-anchor="middle" fill="#000" font-size="10" font-weight="bold">RESPONSE</text>
+                </svg>
+            `;
+            document.getElementById('fc-reference-tag').innerText = `Campbell Biology / Gray's Anatomy • ${sysName}`;
+
+            const btnPrev = document.getElementById('btn-fc-prev');
+            btnPrev.style.opacity = (currentFcIndex === 0) ? '0.4' : '1';
+            btnPrev.disabled = (currentFcIndex === 0);
+        }
+
+        function toggleCardFlip() {
+            isCardFlipped = !isCardFlipped;
+            const frontView = document.getElementById('fc-view-front');
+            const backView = document.getElementById('fc-view-back');
+            const sideLabel = document.getElementById('fc-side-label');
+            const watermarkTag = document.getElementById('fc-watermark-tag');
+
+            if (isCardFlipped) {
+                frontView.classList.add('hidden');
+                backView.classList.remove('hidden');
+                sideLabel.innerText = 'คำตอบ';
+                watermarkTag.innerText = 'ANSWER';
+            } else {
+                frontView.classList.remove('hidden');
+                backView.classList.add('hidden');
+                sideLabel.innerText = 'คำถาม';
+                watermarkTag.innerText = 'QUESTION';
+            }
+        }
+
+        function nextCard() {
+            if (currentFcIndex < activeDeck.length - 1) {
+                currentFcIndex++;
+                renderCurrentCard();
+            } else {
+                showFcCompleted();
+            }
+        }
+
+        function prevCard() {
+            if (currentFcIndex > 0) {
+                currentFcIndex--;
+                renderCurrentCard();
+            }
+        }
+
+        function restartDeck() {
+            currentFcIndex = 0;
+            isCardFlipped = false;
+            navigateTo('flashcard-runner');
+            renderCurrentCard();
+        }
+
+        function shuffleDeck() {
+            if (!activeDeck || activeDeck.length <= 1) return;
+            for (let i = activeDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [activeDeck[i], activeDeck[j]] = [activeDeck[j], activeDeck[i]];
+            }
+            currentFcIndex = 0;
+            renderCurrentCard();
+            showToast('สุ่มสลับลำดับแฟลชการ์ดเรียบร้อยแล้ว');
+        }
+
+        function speakCurrentCard() {
+            if (!('speechSynthesis' in window)) {
+                showToast('เบราว์เซอร์นี้ไม่รองรับการอ่านเสียง');
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const card = activeDeck[currentFcIndex];
+            const textToSpeak = isCardFlipped ? card.answer : card.question;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak.replace('\n', ' '));
+            utterance.lang = 'th-TH';
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function showFcCompleted() {
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === currentFcSystemId);
+            const partText = (currentFcPartId === 'anatomy') ? 'พาร์ททบทวนระบบกายวิภาคศาสตร์' : 'พาร์ททบทวนระบบสรีรวิทยา';
+
+            document.getElementById('fc-finished-count').innerText = activeDeck.length;
+            document.getElementById('fc-finish-system').innerText = sysObj ? sysObj.name : '-';
+            document.getElementById('fc-finish-part').innerText = partText;
+
+            navigateTo('flashcard-complete');
+        }
+
+        function openOptionsModal() {
+            document.getElementById('modal-options').classList.remove('hidden');
+        }
+        function closeOptionsModal() {
+            document.getElementById('modal-options').classList.add('hidden');
+        }
+
+        /* ==========================================================================
+           5. SCRATCHPAD CANVAS CONTROLLER
+           ========================================================================== */
+        let scratchpadCanvas, scratchpadCtx;
+        let isDrawing = false;
+        let penColor = '#1e293b';
+
+        function initScratchpad() {
+            scratchpadCanvas = document.getElementById('scratchpad-canvas');
+            if (!scratchpadCanvas) return;
+            scratchpadCtx = scratchpadCanvas.getContext('2d');
+
+            const rect = scratchpadCanvas.parentElement.getBoundingClientRect();
+            scratchpadCanvas.width = rect.width || 600;
+            scratchpadCanvas.height = rect.height || 400;
+
+            scratchpadCtx.lineWidth = 3;
+            scratchpadCtx.lineCap = 'round';
+            scratchpadCtx.strokeStyle = penColor;
+
+            const startDraw = (e) => {
+                isDrawing = true;
+                const pos = getCanvasPos(e);
+                scratchpadCtx.beginPath();
+                scratchpadCtx.moveTo(pos.x, pos.y);
+            };
+            const moveDraw = (e) => {
+                if (!isDrawing) return;
+                const pos = getCanvasPos(e);
+                scratchpadCtx.lineTo(pos.x, pos.y);
+                scratchpadCtx.stroke();
+            };
+            const stopDraw = () => { isDrawing = false; };
+
+            scratchpadCanvas.onmousedown = startDraw;
+            scratchpadCanvas.onmousemove = moveDraw;
+            scratchpadCanvas.onmouseup = stopDraw;
+            scratchpadCanvas.onmouseleave = stopDraw;
+
+            scratchpadCanvas.ontouchstart = (e) => { e.preventDefault(); startDraw(e.touches[0]); };
+            scratchpadCanvas.ontouchmove = (e) => { e.preventDefault(); moveDraw(e.touches[0]); };
+            scratchpadCanvas.ontouchend = stopDraw;
+        }
+
+        function getCanvasPos(evt) {
+            const rect = scratchpadCanvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+
+        function setPenColor(color) {
+            penColor = color;
+            if (scratchpadCtx) scratchpadCtx.strokeStyle = color;
+        }
+
+        function clearScratchpad() {
+            if (scratchpadCtx && scratchpadCanvas) {
+                scratchpadCtx.clearRect(0, 0, scratchpadCanvas.width, scratchpadCanvas.height);
+            }
+        }
+
+        function openScratchpad() {
+            document.getElementById('modal-scratchpad').classList.remove('hidden');
+            setTimeout(initScratchpad, 100);
+        }
+
+        function closeScratchpad() {
+            document.getElementById('modal-scratchpad').classList.add('hidden');
+        }
+
+        /* ==========================================================================
+           6. EXAMINATION MODE WITH REAL-TIME TIMER & ANATOMICAL KEYWORD CLUES
+           ========================================================================== */
+        const KEYWORD_CLUES_BANK = [
+            {
+                name: 'ต่อมไทรอยด์',
+                location: 'ด้านหน้าของลำคอ บริเวณใต้ต่อลูกกระเดือก (Larynx) หน้าต่อหลอดลม (Trachea)',
+                function: 'สังเคราะห์และหลั่งฮอร์โมน T3 (Triiodothyronine) และ T4 (Thyroxine) ควบคุม Basal Metabolic Rate',
+                adjacent: 'หลอดลม (Trachea), กล้ามเนื้อ Sternocleidomastoid, ต่อมพาราไทรอยด์ 4 ต่อมด้านหลัง',
+                feature: 'รูปร่างคล้ายผีเสื้อ (Butterfly-shaped) ประกอบด้วย 2 Lobes เชื่อมกันด้วย Isthmus'
+            },
+            {
+                name: 'กระเพาะอาหาร',
+                location: 'ช่องท้องฝั่งซ้ายบน (Left Upper Quadrant) ใต้ต่อกะบังลม',
+                function: 'ย่อยอาหารเชิงกลด้วยการบีบตัว และย่อยเชิงเคมีโดยหลั่ง Pepsinogen และ HCl',
+                adjacent: 'ตับ (ฝั่งขวา), ม้าม (ฝั่งซ้าย), ตับอ่อน (ด้านหลัง), กะบังลม (ด้านบน)',
+                feature: 'อวัยวะรูปตัวเจ (J-shaped organ) มี Rugae เป็นรอยพับภายในกระเพาะ'
+            },
+            {
+                name: 'หัวใจ',
+                location: 'ช่องอกบริเวณ Mediastinum ระหว่างปอดทั้งสองข้าง ค่อนไปทางซ้าย',
+                function: 'สูบฉีดเลือดไปเลี้ยงปอดเพื่อแลกเปลี่ยนแก๊ส และสูบฉีดเลือดแดงไปเลี้ยงทั่วร่างกาย',
+                adjacent: 'ปอดซ้ายและปอดขวา, กะบังลม (ด้านล่าง), หลอดอาหารและกระดูกสันหลัง (ด้านหลัง)',
+                feature: 'มี 4 ห้อง (2 Atria, 2 Ventricles) ล้อมรอบด้วยเยื่อหุ้ม Pericardium'
+            },
+            {
+                name: 'ไต',
+                location: 'ช่องท้องด้านหลัง (Retroperitoneal space) ระดับ T12 ถึง L3 ข้างๆ กระดูกสันหลัง',
+                function: 'กรองของเสียออกจากเลือด ปรับสมดุลน้ำ อิเล็กโทรไลต์ กรด-ด่าง และหลั่ง Renin/Erythropoietin',
+                adjacent: 'ต่อมหมวกไต (ด้านบน), ตับ (ขวา), ม้าม (ซ้าย), ท่อไต Ureter (ด้านล่าง)',
+                feature: 'รูปร่างคล้ายเมล็ดถั่ว (Bean-shaped) มีหน่วยกรองหลักคือ Nephron'
+            },
+            {
+                name: 'ตับ',
+                location: 'ช่องท้องฝั่งขวาบน (Right Upper Quadrant) ใต้ต่อกะบังลมขวา',
+                function: 'สร้างน้ำดี (Bile), กำจัดสารพิษ (Detoxification), สะสม Glycogen และสังเคราะห์ Plasma Proteins',
+                adjacent: 'ถุงน้ำดี (Gallbladder), กระเพาะอาหาร, กะบังลม, ลำไส้ใหญ่ส่วนขวา',
+                feature: 'อวัยวะภายในที่มีขนาดใหญ่ที่สุดในร่างกาย มี 4 Lobes หลัก'
+            },
+            {
+                name: 'ปอด',
+                location: 'ช่องอก (Thoracic Cavity) ทั้งสองข้าง ล้อมรอบด้วยเยื่อหุ้มปอด Pleura',
+                function: 'แลกเปลี่ยนแก๊ส O2 เข้าสู่กระแสเลือด และกำจัด CO2 ออกจากร่างกายผ่านถุงลม (Alveoli)',
+                adjacent: 'หัวใจ (ตรงกลาง), กะบังลม (ด้านล่าง), ซี่โครง (ด้านข้าง)',
+                feature: 'ปอดขวามี 3 Lobes ปอดซ้ายมี 2 Lobes (มี Cardiac notch สำหรับหัวใจ)'
+            }
+        ];
+
+        function renderExamSelection() {
+            const container = document.getElementById('exam-system-grid');
+            container.innerHTML = ORGAN_SYSTEMS.map(sys => `
+                <div onclick="startExam('${sys.id}')"
+                    class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-nursing-600 transition cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-mono font-bold text-slate-400">ชุดที่ ${sys.code}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px]">50 ข้อรวม</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl ${sys.color} text-white flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+                            <i class="fa-solid ${sys.icon}"></i>
+                        </div>
+                        <h4 class="font-extrabold text-slate-800 text-base group-hover:text-nursing-600 transition">${sys.name}</h4>
+                        <p class="text-xs text-slate-500 mt-1">ปรนัย 35 ข้อ + อัตนัยคีย์เวิร์ด 15 ข้อ</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-nursing-600 font-bold text-xs">
+                        <span>เริ่มทำแบบทดสอบ</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateExamQuestions(sysId) {
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === sysId) || ORGAN_SYSTEMS[0];
+            const sysName = sysObj.name;
+            const questions = [];
+
+            const mcStems = [
+                { stem: 'เส้นทางการส่งสัญญาณทางสรีรวิทยาในส่วนนี้เริ่มต้นจากโครงสร้างใดไปสิ้นสุดที่ใด', options: ['จากศูนย์ควบคุมส่วนกลาง ➔ ผ่านตัวส่งสัญญาณ ➔ เซลล์เป้าหมาย', 'จากอวัยวะส่วนปลาย ➔ ย้อนกลับไปยังหลอดเลือดใหญ่', 'จากเยื่อหุ้มเซลล์ ➔ สลายตัวในกระแสเลือดทันที', 'ไม่มีการส่งสัญญาณผ่านสารเคมี'], correct: 0 },
+                { stem: 'หากเกิดความผิดปกติในระดับพยาธิวิทยาของอวัยวะหลักในระบบนี้ ผู้ป่วยจะแสดงอาการสำคัญอย่างไร', options: ['เกิดภาวะเสียสมดุลการทำงานและแสดงอาการเฉพาะตามอวัยวะที่ขาดหรือเกิน', 'ไม่มีการเปลี่ยนแปลงของสัญญาณชีพและผลแล็บ', 'ระดับฮอร์โมนในเลือดจะลดลงเป็นศูนย์ทันที', 'ไม่ส่งผลกระทบต่อระบบอื่นในร่างกาย'], correct: 0 },
+                { stem: 'พยาบาลควรเลือกใช้การตรวจประเมินทางคลินิกใดเป็นอันดับแรกในการดูแลผู้ป่วยระบบนี้', options: ['ประเมินสัญญาณชีพ สังเกตอาการแสดงเฉพาะ และตรวจผลทางห้องปฏิบัติการที่เกี่ยวข้อง', 'งดให้อาหารและน้ำทันทีโดยไม่ประเมินอาการ', 'เจาะเลือดส่งตรวจพันธุกรรมทุกราย', 'จำกัดการเคลื่อนไหวของผู้ป่วยบนเตียงอย่างเดียว'], correct: 0 },
+                { stem: 'กลไกทางชีวเคมีในการควบคุมสมดุลสารในเลือดของระบบนี้ใช้หลักการใด', options: ['กลไกป้อนกลับแบบลบ (Negative Feedback Mechanism)', 'การสะสมสารพิษในเนื้อเยื่ออย่างถาวร', 'การยับยั้งการหายใจระดับเซลล์', 'การกระตุ้นเอนไซม์โดยไม่หยุดยั้ง'], correct: 0 }
+            ];
+
+            for (let i = 1; i <= 50; i++) {
+                const isSubjective = (i % 3 === 0);
+
+                if (isSubjective) {
+                    const clueObj = KEYWORD_CLUES_BANK[((i / 3) - 1) % KEYWORD_CLUES_BANK.length];
+                    const charLen = clueObj.name.length;
+
+                    // Cleaned Title without parentheses like (อัตนัย)
+                    questions.push({
+                        id: `exam-${sysId}-${i}`,
+                        type: 'subjective',
+                        title: `ข้อที่ ${i}: โปรดวิเคราะห์ข้อมูลคีย์เวิร์ดทางกายวิภาคศาสตร์ แล้วระบุชื่ออวัยวะให้ถูกต้อง`,
+                        correctAnswer: clueObj.name,
+                        charCount: charLen,
+                        clues: clueObj,
+                        explanation: `อวัยวะตรงกับคีย์เวิร์ดคือ "${clueObj.name}" (คำตอบตรงตามชื่อทางกายวิภาคศาสตร์ มีจำนวน ${charLen} ตัวอักษร)`
+                    });
+                } else {
+                    const stemObj = mcStems[(i - 1) % mcStems.length];
+                    // Cleaned Title without parentheses like (ปรนัย)
+                    questions.push({
+                        id: `exam-${sysId}-${i}`,
+                        type: 'mc',
+                        title: `ข้อที่ ${i}: ใน${sysName} ${stemObj.stem}`,
+                        options: stemObj.options,
+                        correctIndex: stemObj.correct,
+                        explanation: `คำตอบที่ถูกต้องคือข้อ ก. เนื่องจากเป็นหลักการทางสรีรวิทยาและกายวิภาคศาสตร์ที่ถูกต้องของการทำงานใน${sysName}`
+                    });
+                }
+            }
+            return questions;
+        }
+
+        function startExam(sysId) {
+            currentExamSystemId = sysId;
+            activeExamQuestions = generateExamQuestions(sysId);
+            currentExamIndex = 0;
+            userExamAnswers = {};
+            startExamTimer();
+            navigateTo('exam-runner');
+            renderExamQuestion();
+        }
+
+        function renderExamQuestion() {
+            const q = activeExamQuestions[currentExamIndex];
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === currentExamSystemId);
+
+            document.getElementById('exam-system-tag').innerText = sysObj ? sysObj.name : 'กายวิภาคศาสตร์';
+            document.getElementById('exam-q-counter').innerText = `ข้อที่ ${currentExamIndex + 1} / ${activeExamQuestions.length}`;
+
+            const pct = Math.round(((currentExamIndex + 1) / activeExamQuestions.length) * 100);
+            document.getElementById('exam-progress-bar').style.width = `${pct}%`;
+
+            // Display clean title without (ปรนัย) or (อัตนัย)
+            document.getElementById('exam-question-title').innerText = q.title;
+
+            const mcContainer = document.getElementById('exam-container-mc');
+            const imgContainer = document.getElementById('exam-container-img');
+
+            if (q.type === 'mc') {
+                mcContainer.classList.remove('hidden');
+                imgContainer.classList.add('hidden');
+                document.getElementById('exam-type-badge').innerText = 'เลือกตอบตัวเลือก';
+
+                const selected = userExamAnswers[currentExamIndex];
+                mcContainer.innerHTML = q.options.map((opt, idx) => `
+                    <button onclick="selectMcOption(${idx})"
+                        class="w-full text-left p-4 rounded-xl border text-sm font-semibold transition flex items-center justify-between ${selected === idx ? 'bg-emerald-50 border-fisherman-green text-fisherman-green shadow-xs' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'}">
+                        <span>${opt}</span>
+                        ${selected === idx ? '<i class="fa-solid fa-circle-check text-fisherman-green text-lg"></i>' : '<i class="fa-regular fa-circle text-slate-300"></i>'}
+                    </button>
+                `).join('');
+            } else {
+                mcContainer.classList.add('hidden');
+                imgContainer.classList.remove('hidden');
+                document.getElementById('exam-type-badge').innerText = 'ระบุชื่ออวัยวะจากคีย์เวิร์ด';
+
+                document.getElementById('exam-char-count-badge').innerText = `[คำตอบ ${q.charCount} ตัวอักษร]`;
+                document.getElementById('exam-clue-location').innerText = q.clues.location;
+                document.getElementById('exam-clue-function').innerText = q.clues.function;
+                document.getElementById('exam-clue-adjacent').innerText = q.clues.adjacent;
+                document.getElementById('exam-clue-feature').innerText = q.clues.feature;
+
+                const textInput = document.getElementById('exam-text-answer');
+                textInput.value = userExamAnswers[currentExamIndex] || '';
+                textInput.oninput = (e) => {
+                    userExamAnswers[currentExamIndex] = e.target.value.trim();
+                };
+            }
+
+            document.getElementById('btn-exam-prev').disabled = (currentExamIndex === 0);
+            document.getElementById('btn-exam-prev').style.opacity = (currentExamIndex === 0) ? '0.5' : '1';
+
+            const btnNext = document.getElementById('btn-exam-next');
+            if (currentExamIndex === activeExamQuestions.length - 1) {
+                btnNext.innerHTML = 'ส่งแบบทดสอบ <i class="fa-solid fa-check ml-1"></i>';
+            } else {
+                btnNext.innerHTML = 'ข้อถัดไป <i class="fa-solid fa-chevron-right ml-1"></i>';
+            }
+        }
+
+        function selectMcOption(idx) {
+            userExamAnswers[currentExamIndex] = idx;
+            renderExamQuestion();
+        }
+
+        function nextExamQuestion() {
+            if (currentExamIndex < activeExamQuestions.length - 1) {
+                currentExamIndex++;
+                renderExamQuestion();
+            } else {
+                submitExam();
+            }
+        }
+
+        function prevExamQuestion() {
+            if (currentExamIndex > 0) {
+                currentExamIndex--;
+                renderExamQuestion();
+            }
+        }
+
+        function submitExam() {
+            stopExamTimer();
+            const timeSpentStr = formatTimeSpent(examSecondsElapsed);
+
+            let score = 0;
+            activeExamQuestions.forEach((q, idx) => {
+                const userAns = userExamAnswers[idx];
+                if (q.type === 'mc') {
+                    if (userAns === q.correctIndex) score++;
+                } else {
+                    if (userAns && userAns.trim() === q.correctAnswer) score++;
+                }
+            });
+
+            const percent = Math.round((score / activeExamQuestions.length) * 100);
+            const isPassed = percent >= 60;
+            const sysObj = ORGAN_SYSTEMS.find(s => s.id === currentExamSystemId);
+            const sysName = sysObj ? sysObj.name : 'กายวิภาคศาสตร์';
+
+            if (currentUser) {
+                if (!currentUser.history) currentUser.history = [];
+                currentUser.history.unshift({
+                    date: new Date().toLocaleString('th-TH'),
+                    systemName: sysName,
+                    score: score,
+                    total: activeExamQuestions.length,
+                    percent: percent,
+                    passed: isPassed,
+                    timeSpent: timeSpentStr
+                });
+                saveUserData();
+            }
+
+            document.getElementById('result-status-title').innerText = isPassed ? 'สอบผ่านเกณฑ์มาตรฐาน!' : 'ควรทบทวนความรู้เพิ่มเติม';
+            document.getElementById('result-user-subtitle').innerText = `${currentUser.prefix}${currentUser.name} (รหัส ${currentUser.id})`;
+            document.getElementById('res-score-num').innerText = `${score} / ${activeExamQuestions.length}`;
+            document.getElementById('res-score-percent').innerText = `${percent}%`;
+            document.getElementById('res-pass-badge').innerText = isPassed ? 'ผ่าน' : 'ไม่ผ่าน';
+            document.getElementById('res-pass-badge').className = isPassed ? 'text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1' : 'text-2xl sm:text-3xl font-extrabold text-rose-600 mt-1';
+            document.getElementById('res-time-spent').innerText = timeSpentStr;
+            document.getElementById('res-system-name').innerText = sysName;
+
+            const reviewContainer = document.getElementById('exam-review-list');
+            reviewContainer.innerHTML = activeExamQuestions.map((q, idx) => {
+                const userAns = userExamAnswers[idx];
+                let isCorrect = false;
+                let userDisplay = 'ไม่ได้ตอบ';
+
+                if (q.type === 'mc') {
+                    isCorrect = (userAns === q.correctIndex);
+                    if (userAns !== undefined) userDisplay = q.options[userAns];
+                } else {
+                    isCorrect = (userAns && userAns.trim() === q.correctAnswer);
+                    userDisplay = userAns || 'ไม่ได้ตอบ';
+                }
+
+                return `
+                    <div class="p-3 rounded-xl border ${isCorrect ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'} text-xs space-y-1">
+                        <div class="flex items-center justify-between font-bold text-slate-800">
+                            <span>ข้อที่ ${idx + 1}: ${q.title}</span>
+                            <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${isCorrect ? '✓ ถูกต้อง (+1)' : '✗ ผิด (0)'}</span>
+                        </div>
+                        <div class="text-slate-600"><strong>คำตอบของคุณ:</strong> ${userDisplay}</div>
+                        <div class="text-slate-600"><strong>เฉลยที่ถูกต้อง:</strong> ${q.type === 'mc' ? q.options[q.correctIndex] : q.correctAnswer}</div>
+                        <div class="text-slate-500 italic mt-1">${q.explanation}</div>
+                    </div>
+                `;
+            }).join('');
+
+            navigateTo('exam-result');
+        }
+
+        /* ==========================================================================
+           7. MY PROFILE & SCORE HISTORY
+           ========================================================================== */
+        function renderProfileHistory() {
+            if (!currentUser) return;
+            const history = currentUser.history || [];
+
+            document.getElementById('prof-stat-count').innerText = `${history.length} ครั้ง`;
+
+            if (history.length > 0) {
+                const avg = Math.round(history.reduce((acc, curr) => acc + curr.percent, 0) / history.length);
+                const max = Math.max(...history.map(h => h.percent));
+                document.getElementById('prof-stat-avg').innerText = `${avg}%`;
+                document.getElementById('prof-stat-max').innerText = `${max}%`;
+
+                document.getElementById('profile-empty-msg').classList.add('hidden');
+                const tbody = document.getElementById('profile-history-rows');
+                tbody.innerHTML = history.map(h => `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 text-xs font-mono text-slate-500">${h.date}</td>
+                        <td class="p-3 font-semibold text-slate-800">${h.systemName}</td>
+                        <td class="p-3 text-center font-bold text-slate-700">${h.score} / ${h.total}</td>
+                        <td class="p-3 text-center font-extrabold text-fisherman-green">${h.percent}%</td>
+                        <td class="p-3 text-center font-mono text-xs font-bold text-amber-700">${h.timeSpent || '-'}</td>
+                        <td class="p-3 text-center">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${h.passed ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
+                                ${h.passed ? 'ผ่านเกณฑ์' : 'ไม่ผ่าน'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                document.getElementById('prof-stat-avg').innerText = '0%';
+                document.getElementById('prof-stat-max').innerText = '0%';
+                document.getElementById('profile-history-rows').innerHTML = '';
+                document.getElementById('profile-empty-msg').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
