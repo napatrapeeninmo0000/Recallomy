@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anatomy Nursing Academy - ระบบทบทวนและทดสอบกายวิภาคศาสตร์พยาบาล</title>
+    <title>Recallomy - ระบบทบทวนและทดสอบกายวิภาคศาสตร์พยาบาล</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -123,7 +123,7 @@
                     <i class="fa-solid fa-user-nurse"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg leading-tight tracking-wide">Anatomy Nursing Academy</h1>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">Recallomy</h1>
                     <p class="text-xs text-nursing-100 font-light">ระบบทบทวน &amp; คลังสอบกายวิภาคศาสตร์พยาบาล</p>
                 </div>
             </div>
@@ -175,9 +175,9 @@
                     </div>
                 </div>
 
-                <!-- 5-Digit Student ID Range 63001 - 63080 -->
+                <!-- 5-Digit Student ID -->
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">รหัสประจำตัวนักศึกษา (63001 - 63080)</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">รหัสประจำตัวนักศึกษา</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-hashtag"></i>
@@ -186,7 +186,7 @@
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                             class="block w-full pl-10 pr-3 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-nursing-500 focus:border-nursing-500 text-sm font-mono text-base tracking-widest">
                     </div>
-                    <p class="text-xs text-slate-500 mt-1">* กรอกเฉพาะรหัสนักศึกษาพยาบาลช่วง 63001 ถึง 63080 เท่านั้น</p>
+                    <p class="text-xs text-slate-500 mt-1">* กรอกรหัสนักศึกษาพยาบาล 5 หลัก</p>
                 </div>
 
                 <!-- Info Notice -->
@@ -864,7 +864,7 @@
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-10">
         <div class="max-w-7xl mx-auto px-4 text-center space-y-1.5">
-            <p class="font-semibold text-slate-300">Anatomy Nursing Academy &copy; 2026 - สื่อการทบทวนกายวิภาคศาสตร์เพื่อวิชาชีพการพยาบาล</p>
+            <p class="font-semibold text-slate-300">Recallomy &copy; 2026 - สื่อการทบทวนกายวิภาคศาสตร์เพื่อวิชาชีพการพยาบาล</p>
             <p>ออกแบบตามมาตรฐาน Fisherman Education สำหรับนักศึกษาและนักเรียนพยาบาลทั่วประเทศ</p>
         </div>
     </footer>
@@ -931,8 +931,8 @@
             }
 
             const idNum = parseInt(idInput, 10);
-            if (isNaN(idNum) || idNum < 63001 || idNum > 63080) {
-                showToast('รหัสนักศึกษาต้องเป็นตัวเลขระหว่าง 63001 ถึง 63080 เท่านั้น');
+            if (isNaN(idNum) || idInput.length !== 5) {
+                showToast('กรุณากรอกรหัสนักศึกษาพยาบาลเป็นตัวเลข 5 หลัก');
                 return;
             }
 
